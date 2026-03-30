@@ -1,0 +1,232 @@
+:root{
+  --bg0:#07090d;
+  --bg1:#0a0f18;
+  --glass: rgba(255,255,255,.06);
+  --glass2: rgba(255,255,255,.09);
+  --stroke: rgba(255,255,255,.12);
+  --text: rgba(255,255,255,.92);
+  --muted: rgba(255,255,255,.62);
+  --gold: rgba(214,179,106,.95);
+  --danger: rgba(244, 71, 85, .95);
+  --shadow: 0 18px 60px rgba(0,0,0,.55);
+  --r16: 16px;
+  --r20: 20px;
+  --r24: 24px;
+  --tap: 44px;
+  --dockH: 72px;
+  --safe-top-raw: env(safe-area-inset-top, 0px);
+  --safe-right-raw: env(safe-area-inset-right, 0px);
+  --safe-bottom-raw: env(safe-area-inset-bottom, 0px);
+  --safe-left-raw: env(safe-area-inset-left, 0px);
+  --safe-top: var(--safe-top-raw);
+  --safe-right: var(--safe-right-raw);
+  --safe-bottom: var(--safe-bottom-raw);
+  --safe-left: var(--safe-left-raw);
+  --app-height: 100vh;
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --app-height: 100dvh;
+  }
+}
+
+*{ box-sizing:border-box; }
+html, body, #root{ height:100%; min-height:100%; }
+
+/* Sprečava bounce/scroll celog ekrana na mobilnom (iOS/Android).
+   Unutrašnji paneli (npr. drawerBody) i dalje mogu da skroluju. */
+html{
+  overscroll-behavior: none;
+  background: #07090d;
+}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background: radial-gradient(1200px 700px at 25% 20%, rgba(214,179,106,.10), transparent 55%),
+              radial-gradient(900px 600px at 75% 80%, rgba(120,160,255,.10), transparent 55%),
+              linear-gradient(180deg, var(--bg0), var(--bg1));
+  color: var(--text);
+  overflow: hidden;
+}
+
+#root{
+  position: relative;
+  overflow: hidden;
+}
+
+a{ color:inherit; text-decoration:none; }
+button{ font: inherit; }
+
+.safe{
+  padding-left: max(12px, var(--safe-left));
+  padding-right: max(12px, var(--safe-right));
+  padding-top: max(12px, var(--safe-top));
+  padding-bottom: max(12px, var(--safe-bottom));
+}
+
+.glass{
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  border: 1px solid var(--stroke);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+
+.btn{
+  min-height: var(--tap);
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.22);
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  user-select: none;
+  touch-action: manipulation;
+}
+.btn:active{ transform: translateY(1px); }
+
+.btn.primary{
+  background: linear-gradient(180deg, rgba(214,179,106,.26), rgba(0,0,0,.18));
+  border-color: rgba(214,179,106,.40);
+}
+.btn.danger{
+  background: rgba(244,71,85,.12);
+  border-color: rgba(244,71,85,.32);
+}
+
+.pill{
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hint{ color: var(--muted); font-size: 13px; line-height: 1.4; }
+
+.fadeIn{ animation: fade .22s ease; }
+@keyframes fade{ from{ opacity:0; transform: translateY(4px);} to{opacity:1; transform:none;} }
+
+/* Drawer */
+.drawerBackdrop{
+  position:absolute; inset:0;
+  background: rgba(0,0,0,.28);
+  backdrop-filter: blur(5px);
+}
+.drawer{
+  position:absolute;
+  left: 10px;
+  right: 10px;
+  bottom: calc(10px + var(--dockH));
+  top: 80px;
+  border-radius: var(--r24);
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+.drawerHeader{
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 12px 12px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.drawerBody{
+  padding: 12px;
+  min-height: 0;
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.drawer--fullscreen .drawerHeader{
+  padding-top: max(12px, var(--safe-top));
+  padding-right: max(12px, var(--safe-right));
+  padding-left: max(12px, var(--safe-left));
+}
+
+.drawer--fullscreen .drawerBody{
+  padding-right: max(12px, var(--safe-right));
+  padding-bottom: max(12px, var(--safe-bottom));
+  padding-left: max(12px, var(--safe-left));
+}
+
+/* Mobile Dock */
+.dock{
+  position:absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  height: var(--dockH);
+  border-radius: var(--r24);
+  padding: 10px;
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.dockBtn{
+  flex: 1;
+  height: 100%;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.18);
+  color: var(--text);
+  cursor:pointer;
+  display:grid;
+  grid-template-rows: 1fr auto;
+  align-items:center;
+  justify-items:center;
+  padding: 8px 6px;
+  gap: 2px;
+  user-select:none;
+}
+.dockBtn span{
+  font-size: 11.5px;
+  color: rgba(255,255,255,.78);
+  letter-spacing: .2px;
+  line-height: 1;
+}
+.dockBtn strong{
+  font-size: 18px;
+  color: rgba(255,255,255,.88);
+}
+.dockBtn.active{
+  border-color: rgba(214,179,106,.40);
+  background: linear-gradient(180deg, rgba(214,179,106,.14), rgba(0,0,0,.18));
+}
+
+/* Desktop layout */
+@media (min-width: 901px){
+  :root{ --dockH: 0px; }
+  .dock{ display:none; }
+  .drawer{ left:auto; right:auto; bottom:auto; top:auto; }
+}
+
+/* === DESKTOP: centriranje teksta u dugmadima Elementi / Opcije === */
+@media (min-width: 901px) {
+  button.glass {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  button.glass > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+/* Jedinstveni viewport model za sve modove: browser, PWA i desktop. */
+.fullscreen {
+  width: 100%;
+  height: var(--app-height);
+  min-height: var(--app-height);
+}
+
+/* SVG ikonice: uvek vidljive */
+svg { display: block; }

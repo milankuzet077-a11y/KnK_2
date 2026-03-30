@@ -1,0 +1,19 @@
+{
+  "catalogId": "handles",
+  "name": "Ručice i cokla",
+  "description": "Template katalog za ručice i coklu. Cena se ne prikazuje u UI kartici.",
+  "items": [
+    {
+      "id": "handle-template-01",
+      "name": "Naziv završne obrade",
+      "type": "finish",
+      "image": "",
+      "thumbnail": "",
+      "handleColor": "",
+      "plinthColor": "",
+      "details": "Opis završne obrade ručica i cokle.",
+      "active": true,
+      "sortOrder": 100
+    }
+  ]
+}

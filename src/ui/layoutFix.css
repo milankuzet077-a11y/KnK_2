@@ -1,0 +1,7 @@
+@media (min-width: 1026px) {
+  .dock,
+  .drawer,
+  .drawerBackdrop {
+    display: none !important;
+  }
+}

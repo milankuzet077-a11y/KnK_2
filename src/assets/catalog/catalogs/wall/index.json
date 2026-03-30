@@ -1,0 +1,328 @@
+{
+  "catalogId": "wall",
+  "items": [
+    {
+      "id": "v0",
+      "name": "Dekorativna stranica",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v0.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v0.png",
+      "dims": {
+        "w": 20,
+        "h": 720,
+        "d": 350
+      },
+      "price": 2800,
+      "promoPrice": 2200,
+      "tags": [
+        "gornji",
+        "20"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "v1",
+      "name": "D-30",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v1.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v1.png",
+      "dims": {
+        "w": 300,
+        "h": 720,
+        "d": 330
+      },
+      "price": 7200,
+      "promoPrice": 6000,
+      "tags": [
+        "gornji",
+        "300"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "v2",
+      "name": "D-40",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v2.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v2.png",
+      "dims": {
+        "w": 400,
+        "h": 720,
+        "d": 330
+      },
+      "price": 7500,
+      "promoPrice": 6250,
+      "tags": [
+        "gornji",
+        "400"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "v3",
+      "name": "D-45",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v3.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v3.png",
+      "dims": {
+        "w": 450,
+        "h": 720,
+        "d": 330
+      },
+      "price": 7800,
+      "promoPrice": 6500,
+      "tags": [
+        "gornji",
+        "450"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "v4",
+      "name": "D-50",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v4.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v4.png",
+      "dims": {
+        "w": 500,
+        "h": 720,
+        "d": 330
+      },
+      "price": 8500,
+      "promoPrice": 7000,
+      "tags": [
+        "gornji",
+        "500"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "v5",
+      "name": "D-60",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v5.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v5.png",
+      "dims": {
+        "w": 600,
+        "h": 720,
+        "d": 330
+      },
+      "price": 9000,
+      "promoPrice": 7500,
+      "tags": [
+        "gornji",
+        "600"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "v6",
+      "name": "D-60 2K",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v6.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v6.png",
+      "dims": {
+        "w": 600,
+        "h": 720,
+        "d": 330
+      },
+      "price": 10000,
+      "promoPrice": 8500,
+      "tags": [
+        "gornji",
+        "600"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "v7",
+      "name": "D-80",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v7.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v7.png",
+      "dims": {
+        "w": 800,
+        "h": 720,
+        "d": 330
+      },
+      "price": 12000,
+      "promoPrice": 10000,
+      "tags": [
+        "gornji",
+        "800"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "v8",
+      "name": "KIP x2 D-60",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v8.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v8.png",
+      "dims": {
+        "w": 600,
+        "h": 720,
+        "d": 330
+      },
+      "price": 15000,
+      "promoPrice": 12000,
+      "tags": [
+        "gornji",
+        "600"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "v9",
+      "name": "KIP x2 D-80",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v9.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v9.png",
+      "dims": {
+        "w": 800,
+        "h": 720,
+        "d": 330
+      },
+      "price": 18000,
+      "promoPrice": 15000,
+      "tags": [
+        "gornji",
+        "800"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "v10",
+      "name": "Otvorena polica KIP D-60",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v10.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v10.png",
+      "dims": {
+        "w": 600,
+        "h": 720,
+        "d": 330
+      },
+      "price": 20000,
+      "promoPrice": 17000,
+      "tags": [
+        "gornji",
+        "600"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "v11",
+      "name": "Otvorena polica KIP D-80",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v11.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v11.png",
+      "dims": {
+        "w": 800,
+        "h": 720,
+        "d": 330
+      },
+      "price": 22000,
+      "promoPrice": 19000,
+      "tags": [
+        "gornji",
+        "800"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "v12",
+      "name": "KIP Otvorena polica D-60",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v12.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v12.png",
+      "dims": {
+        "w": 600,
+        "h": 720,
+        "d": 330
+      },
+      "price": 22000,
+      "promoPrice": 19000,
+      "tags": [
+        "gornji",
+        "600"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "v13",
+      "name": "KIP Otvorena polica D-80",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v13.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v13.png",
+      "dims": {
+        "w": 800,
+        "h": 720,
+        "d": 330
+      },
+      "price": 25000,
+      "promoPrice": 22000,
+      "tags": [
+        "gornji",
+        "800"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "v14",
+      "name": "Otvorena polica D-15",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v14.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v14.png",
+      "dims": {
+        "w": 150,
+        "h": 720,
+        "d": 330
+      },
+      "price": 30000,
+      "promoPrice": 25000,
+      "tags": [
+        "gornji",
+        "150"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "v15",
+      "name": "Otvorena polica D-20",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v15.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v15.png",
+      "dims": {
+        "w": 200,
+        "h": 720,
+        "d": 330
+      },
+      "price": 30000,
+      "promoPrice": 25000,
+      "tags": [
+        "gornji",
+        "200"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "v16",
+      "name": "Otvorena polica D-25",
+      "type": "wall",
+      "glb": "/assets/glb/modules/wall/v16.glb",
+      "thumbnail": "/assets/thumbs/modules/wall/v16.png",
+      "dims": {
+        "w": 250,
+        "h": 720,
+        "d": 330
+      },
+      "price": 30000,
+      "promoPrice": 25000,
+      "tags": [
+        "gornji",
+        "250"
+      ],
+      "mountingHeight": 1500
+    }
+  ]
+}

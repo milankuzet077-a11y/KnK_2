@@ -1,0 +1,19 @@
+{
+  "catalogId": "decor",
+  "name": "Dekori",
+  "description": "Template katalog za dekore. Cena se ne prikazuje u UI kartici.",
+  "items": [
+    {
+      "id": "decor-template-01",
+      "name": "Naziv dekora",
+      "type": "finish",
+      "image": "/textures/decor/template.jpg",
+      "thumbnail": "/textures/decor/template.jpg",
+      "appliesTo": ["Donji", "Gornji", "Visoki"],
+      "code": "",
+      "details": "Opis dekora.",
+      "active": true,
+      "sortOrder": 100
+    }
+  ]
+}

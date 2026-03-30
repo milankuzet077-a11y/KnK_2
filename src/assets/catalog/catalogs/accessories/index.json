@@ -1,0 +1,129 @@
+{
+  "catalogId": "accessories",
+  "name": "ne znam sta",
+  "units": "mm",
+  "naming": {
+    "meshPrefixes": {
+      "corpus": "mesh_corpus",
+      "front": "mesh_front",
+      "handle": "mesh_handle",
+      "plinth": "mesh_plinth"
+    },
+    "locators": {
+      "handlePrefix": "loc_handle",
+      "handleCenterPrefix": "loc_handle_center",
+      "handleEndPrefix": "loc_handle_end",
+      "orientationHorizontalSuffix": "_H",
+      "orientationVerticalSuffix": "_V"
+    },
+    "tags": {
+      "wireFrontKeyword": "wire"
+    }
+  },
+  "defaults": {
+    "handle": {
+      "orientation": "horizontal",
+      "mountMode": "center"
+    }
+  },
+  "items": [
+    {
+      "id": "r1",
+      "name": "???",
+      "type": "lower",
+      "dimensions": {
+        "corpusWidth": 600,
+        "corpusHeight": 720,
+        "corpusDepth": 550
+      },
+      "model": {
+        "glb": "/assets/glb/modules/base/r1.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r1.png",
+        "includes": {
+          "front": true,
+          "handle": true
+        },
+        "handleMount": {
+          "preferLocator": true,
+          "centerLocatorPrefix": "loc_handle_center",
+          "endLocatorPrefix": "loc_handle_end",
+          "defaultMountMode": "center",
+          "defaultOrientation": "horizontal",
+          "wireFrontRule": {
+            "enabled": true,
+            "frontKeyword": "wire",
+            "forceOrientation": "vertical"
+          }
+        }
+      },
+      "placement": {
+        "wallAttach": true,
+        "floorAttach": true
+      },
+      "rules": {
+        "allowWorktop": true,
+        "allowEndPanels": true,
+        "allowPlinth": true
+      },
+      "pricing": {
+        "basePrice": 5800,
+        "currency": "RSD"
+      },
+      "materials": {
+        "corpus": true,
+        "front": true,
+        "handle": true
+      },
+      "mountingHeight": 0
+    },
+    {
+      "id": "r2",
+      "name": "???",
+      "type": "lower",
+      "dimensions": {
+        "corpusWidth": 600,
+        "corpusHeight": 720,
+        "corpusDepth": 550
+      },
+      "model": {
+        "glb": "/assets/glb/modules/base/r2.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r2.png",
+        "includes": {
+          "front": true,
+          "handle": false
+        },
+        "handleMount": {
+          "preferLocator": true,
+          "centerLocatorPrefix": "loc_handle_center",
+          "endLocatorPrefix": "loc_handle_end",
+          "defaultMountMode": "center",
+          "defaultOrientation": "horizontal",
+          "wireFrontRule": {
+            "enabled": true,
+            "frontKeyword": "wire",
+            "forceOrientation": "vertical"
+          }
+        }
+      },
+      "placement": {
+        "wallAttach": true,
+        "floorAttach": true
+      },
+      "rules": {
+        "allowWorktop": true,
+        "allowEndPanels": true,
+        "allowPlinth": true
+      },
+      "pricing": {
+        "basePrice": 5950,
+        "currency": "RSD"
+      },
+      "materials": {
+        "corpus": true,
+        "front": false,
+        "handle": false
+      },
+      "mountingHeight": 0
+    }
+  ]
+}

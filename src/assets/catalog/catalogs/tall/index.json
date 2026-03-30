@@ -1,0 +1,59 @@
+{
+  "catalogId": "tall",
+  "items": [
+    {
+      "id": "k0",
+      "name": "Dekorativna stranica",
+      "type": "tall",
+      "glb": "/assets/glb/modules/tall/k0.glb",
+      "thumbnail": "/assets/thumbs/modules/tall/k0.png",
+      "dims": {
+        "w": 20,
+        "h": 2120,
+        "d": 570
+      },
+      "price": 120,
+      "tags": [
+        "tall",
+        "20"
+      ],
+      "mountingHeight": 100
+    },
+    {
+      "id": "k1",
+      "name": "Ugradna Rerna",
+      "type": "tall",
+      "glb": "/assets/glb/modules/tall/k1.glb",
+      "thumbnail": "/assets/thumbs/modules/tall/k1.png",
+      "dims": {
+        "w": 600,
+        "h": 2220,
+        "d": 550
+      },
+      "price": 120,
+      "tags": [
+        "tall",
+        "600"
+      ],
+      "mountingHeight": 0
+    },
+    {
+      "id": "k2",
+      "name": "Ugradni Frižider",
+      "type": "tall",
+      "glb": "/assets/glb/modules/tall/k2.glb",
+      "thumbnail": "/assets/thumbs/modules/tall/k2.png",
+      "dims": {
+        "w": 600,
+        "h": 2220,
+        "d": 550
+      },
+      "price": 150,
+      "tags": [
+        "tall",
+        "600"
+      ],
+      "mountingHeight": 0
+    }
+  ]
+}

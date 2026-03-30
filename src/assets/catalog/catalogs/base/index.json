@@ -1,0 +1,480 @@
+{
+  "catalogId": "base",
+  "items": [
+    {
+      "id": "r0",
+      "name": "Dekorativna stranica",
+      "type": "base",
+      "glb": "/assets/glb/modules/base/r0.glb",
+      "thumbnail": "/assets/thumbs/modules/base/r0.png",
+      "dims": {
+        "w": 20,
+        "h": 720,
+        "d": 570
+      },
+      "price": 3500,
+      "promoPrice": 3000,
+      "tags": [
+        "base",
+        "20"
+      ],
+      "mountingHeight": 100
+    },
+    {
+      "id": "r1",
+      "name": "Sudopera D-60",
+      "type": "base",
+      "glb": "/assets/glb/modules/base/r1.glb",
+      "thumbnail": "/assets/thumbs/modules/base/r1.png",
+      "dims": {
+        "w": 600,
+        "h": 720,
+        "d": 550
+      },
+      "price": 7200,
+      "promoPrice": 6000,
+      "tags": [
+        "base",
+        "600"
+      ],
+      "mountingHeight": 0
+    },
+    {
+      "id": "r2",
+      "name": "Sudopera 2K D-60",
+      "type": "base",
+      "glb": "/assets/glb/modules/base/r2.glb",
+      "thumbnail": "/assets/thumbs/modules/base/r2.png",
+      "dims": {
+        "w": 600,
+        "h": 720,
+        "d": 550
+      },
+      "price": 8100,
+      "promoPrice": 6750,
+      "tags": [
+        "base",
+        "600"
+      ],
+      "mountingHeight": 0
+    },
+    {
+      "id": "r3",
+      "name": "Sudopera 2K D-80",
+      "type": "base",
+      "glb": "/assets/glb/modules/base/r3.glb",
+      "thumbnail": "/assets/thumbs/modules/base/r3.png",
+      "dims": {
+        "w": 800,
+        "h": 720,
+        "d": 550
+      },
+      "price": 8100,
+      "promoPrice": 6750,
+      "tags": [
+        "base",
+        "800"
+      ],
+      "mountingHeight": 0
+    },
+      {
+        "id": "r4",
+        "name": "Ugradna Rerna D-60",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r4.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r4.png",
+        "dims": {
+          "w": 600,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "600"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r5",
+        "name": "Korpa D-15",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r5.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r5.png",
+        "dims": {
+          "w": 150,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "150"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r6",
+        "name": "Korpa D-20",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r6.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r6.png",
+        "dims": {
+          "w": 200,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "200"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r7",
+        "name": "D-30",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r7.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r7.png",
+        "dims": {
+          "w": 300,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "300"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r8",
+        "name": "D-40",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r8.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r8.png",
+        "dims": {
+          "w": 400,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "400"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r9",
+        "name": "D-45",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r9.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r9.png",
+        "dims": {
+          "w": 450,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "450"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r10",
+        "name": "D-50",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r10.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r10.png",
+        "dims": {
+          "w": 500,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "500"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r11",
+        "name": "D-60",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r11.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r11.png",
+        "dims": {
+          "w": 600,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "600"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r12",
+        "name": "Fioka 1K D-40",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r12.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r12.png",
+        "dims": {
+          "w": 400,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "400"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r13",
+        "name": "Fioka 1K D-45",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r13.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r13.png",
+        "dims": {
+          "w": 450,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "450"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r15",
+        "name": "Fioka 1K D-60",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r15.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r15.png",
+        "dims": {
+          "w": 600,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "600"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r16",
+        "name": "Fioke 2+1 D-40",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r16.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r16.png",
+        "dims": {
+          "w": 400,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "400"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r17",
+        "name": "Fioke 2+1 D-45",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r17.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r17.png",
+        "dims": {
+          "w": 450,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "450"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r19",
+        "name": "Fioke 2+1 D-60",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r19.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r19.png",
+        "dims": {
+          "w": 600,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "600"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r20",
+        "name": "Fioke 2+1 D-80",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r20.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r20.png",
+        "dims": {
+          "w": 800,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "800"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r21",
+        "name": "Fioke 2/2 D-40",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r21.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r21.png",
+        "dims": {
+          "w": 400,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "400"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r22",
+        "name": "Fioke 2/2 D-45",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r22.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r22.png",
+        "dims": {
+          "w": 450,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "450"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r24",
+        "name": "Fioke 2/2 D-60",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r24.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r24.png",
+        "dims": {
+          "w": 600,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "600"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r25",
+        "name": "Fioke 2/2 D-80",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r25.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r25.png",
+        "dims": {
+          "w": 800,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "800"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r26",
+        "name": "Panel za sudomašinu D-45",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r26.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r26.png",
+        "dims": {
+          "w": 450,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "450"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r27",
+        "name": "Panel za sudomašinu D-60",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r27.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r27.png",
+        "dims": {
+          "w": 600,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "600"
+        ],
+        "mountingHeight": 0
+      }
+  ]
+}

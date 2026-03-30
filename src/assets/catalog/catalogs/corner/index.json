@@ -1,0 +1,95 @@
+{
+  "catalogId": "corner",
+  "items": [
+    {
+      "id": "u1",
+      "name": "Ugao donji - Levi",
+      "type": "corner",
+      "category": "base",
+      "cornerHandedness": "left",
+      "glb": "/assets/glb/modules/corner/u1.glb",
+      "thumbnail": "/assets/thumbs/modules/corner/u1.png",
+      "dims": {
+        "w": 1100,
+        "h": 720,
+        "d": 650
+      },
+      "price": 7300,
+      "tags": [
+        "corner",
+        "1100"
+      ],
+      "mountingHeight": 100,
+      "worktop": {
+        "armAmm": 1100,
+        "armBmm": 650,
+        "extraCoverMm": 50
+      }
+    },
+    {
+      "id": "u2",
+      "name": "Ugao donji - Desni",
+      "type": "corner",
+      "category": "base",
+      "cornerHandedness": "right",
+      "glb": "/assets/glb/modules/corner/u2.glb",
+      "thumbnail": "/assets/thumbs/modules/corner/u2.png",
+      "dims": {
+        "w": 1100,
+        "h": 720,
+        "d": 650
+      },
+      "price": 7300,
+      "tags": [
+        "corner",
+        "1100"
+      ],
+      "mountingHeight": 100,
+      "worktop": {
+        "armAmm": 650,
+        "armBmm": 1100,
+        "extraCoverMm": 50
+      }
+    },
+    {
+      "id": "u3",
+      "name": "Ugao gornji - Levi",
+      "type": "corner",
+      "category": "wall",
+      "cornerHandedness": "left",
+      "glb": "/assets/glb/modules/corner/u3.glb",
+      "thumbnail": "/assets/thumbs/modules/corner/u3.png",
+      "dims": {
+        "w": 700,
+        "h": 720,
+        "d": 400
+      },
+      "price": 6150,
+      "tags": [
+        "corner",
+        "700"
+      ],
+      "mountingHeight": 1500
+    },
+    {
+      "id": "u4",
+      "name": "Ugao gornji - Desni",
+      "type": "corner",
+      "category": "wall",
+      "cornerHandedness": "right",
+      "glb": "/assets/glb/modules/corner/u4.glb",
+      "thumbnail": "/assets/thumbs/modules/corner/u4.png",
+      "dims": {
+        "w": 700,
+        "h": 720,
+        "d": 400
+      },
+      "price": 6150,
+      "tags": [
+        "corner",
+        "700"
+      ],
+      "mountingHeight": 1500
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "catalogId": "sinks",
+  "name": "Sudopere",
+  "description": "Template katalog za sudopere. Popuniti stvarnim modelima i cenama.",
+  "currency": "RSD",
+  "items": [
+    {
+      "id": "sink-template-01",
+      "name": "Naziv sudopere",
+      "type": "product",
+      "image": "",
+      "thumbnail": "",
+      "price": null,
+      "priceText": "Cena na upit",
+      "shape": "okrugla",
+      "mountType": "",
+      "material": "",
+      "details": "Opis sudopere.",
+      "active": true,
+      "sortOrder": 100
+    }
+  ]
+}

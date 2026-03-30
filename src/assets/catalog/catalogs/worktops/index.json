@@ -1,0 +1,31 @@
+{
+  "catalogId": "worktops",
+  "name": "Radne ploče",
+  "description": "Template katalog za radne ploče. Popuniti stvarnim artiklima i cenama.",
+  "currency": "RSD",
+  "items": [
+    {
+      "id": "bez-radne-ploce",
+      "name": "Bez Radne ploče",
+      "type": "simple-option",
+      "selectOnly": true,
+      "image": "",
+      "details": "Opcija bez radne ploče. Ako je izaberete, radna ploča se uklanja iz konfiguracije."
+    },
+    {
+      "id": "worktop-template-01",
+      "name": "Naziv radne ploče",
+      "type": "product",
+      "image": "/textures/worktops/template/albedo.jpg",
+      "thumbnail": "/textures/worktops/template/albedo.jpg",
+      "price": null,
+      "priceText": "Cena na upit",
+      "material": "",
+      "finish": "",
+      "thicknessMm": null,
+      "details": "Opis radne ploče.",
+      "active": true,
+      "sortOrder": 100
+    }
+  ]
+}

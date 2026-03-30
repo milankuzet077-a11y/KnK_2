@@ -1,0 +1,17 @@
+{
+  "title": "Sudoperski element 60cm",
+  "code": "S-60",
+  "dimensions": { "w": 600, "h": 720, "d": 550 },
+  "specs": {
+    "Okov": "DTC soft-close",
+    "Broj polica": 2,
+    "Materijal": "Egger U702",
+    "Kantovanje": "ABS 1mm",
+    "Ručice": "Crne mat",
+    "Garancija": "24 meseca"
+  },
+ "images": {
+    "hero": "hero.webp",
+    "gallery": ["r1.webp", "r2.webp"]
+  }
+}
