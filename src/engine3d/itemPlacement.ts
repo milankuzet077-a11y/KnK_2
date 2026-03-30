@@ -354,7 +354,7 @@ export function positionModel({ shape, wallAMm, item, model, optionsValues, moun
       model.rotation.y = Math.PI / 2
       model.updateMatrixWorld(true)
       const bb = new THREE.Box3().setFromObject(model)
-      finalX = -halfGap - bb.min.x
+      finalX = -halfGap
       finalZ = -posXMm / 1000
     } else {
       const widthMm = Number(item.width || 0)
