@@ -117,9 +117,9 @@ export function Step3DesktopChrome({
       <div className="safe" style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'flex-end' }}>
           <div className="glass" style={{ borderRadius: 24, padding: 12, display: 'flex', gap: 10, alignItems: 'center' }}>
-            <button className="btn" onClick={onBack}>Nazad</button>
-            <button className="btn primary" onClick={onForward} disabled={isForwardDisabled}>Napred</button>
-            <button className="btn danger" onClick={onDeleteSelected} disabled={isDeleteDisabled}><Icon>{I.trash}</Icon> Obriši</button>
+            <button className="btn" onClick={onBack} aria-label="Undo" title="Undo"><Icon>{I.undo}</Icon></button>
+            <button className="btn primary" onClick={onForward} disabled={isForwardDisabled} aria-label="Redo" title="Redo"><Icon>{I.redo}</Icon></button>
+            <button className="btn danger" onClick={onDeleteSelected} disabled={isDeleteDisabled} aria-label="Obriši" title="Obriši"><Icon>{I.trash}</Icon>Obriši</button>
             <button className="btn danger" onClick={onReset}><Icon>{I.reset}</Icon> Reset</button>
           </div>
           <div className="glass" style={{ borderRadius: 24, padding: 12, display: 'grid', gap: 8, justifyItems: 'end' }}>

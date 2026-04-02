@@ -56,7 +56,7 @@ export function SidePanel({
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
           <div style={{ fontWeight: 900, letterSpacing: .2 }}>{title}</div>
-          <button className="btn" onClick={onToggle} style={{ minHeight: 40, padding: '8px 10px' }}><Icon>{I.close}</Icon> Zatvori</button>
+          <button className="btn danger" onClick={onToggle} style={{ minHeight: 40, padding: '8px 10px' }}><Icon>{I.close}</Icon> Zatvori</button>
         </div>
         <div style={{ marginTop: 12, height: 'calc(100% - 54px)', minHeight: 0, overflow: 'hidden' }}>{children}</div>
       </div>

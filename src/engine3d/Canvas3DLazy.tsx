@@ -1,4 +1,12 @@
 import React, { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react'
+
+/*
+ * Putanja: src/engine3d/Canvas3DLazy.tsx
+ *
+ * Ovde se pre 3D prikaza unapred pripremaju modeli i teksture.
+ * To ne menja direktno boju ili senku, ali menja koliko brzo i kojim kvalitetom
+ * će se završni izgled pojaviti na ekranu.
+ */
 import type { KitchenShape, PlacedItem, Walls } from '../domain/types'
 import type { WorktopVirtualItem } from '../domain/shapes/shared/worktopVirtual'
 import { ErrorBoundary } from '../ui/ErrorBoundary'
@@ -51,12 +59,22 @@ export function Canvas3DLazy(props: Props) {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [isActivated, setIsActivated] = useState(true)
+  const [isDocumentVisible, setIsDocumentVisible] = useState(() => (typeof document === 'undefined' ? true : !document.hidden))
   const quality = useMemo(() => detectQualityProfile(), [])
 
   useEffect(() => {
     markPerf('qualityTier', quality.tier)
     markPerf('step3CanvasActivatedAt')
   }, [quality])
+
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+
+    const handleVisibility = () => setIsDocumentVisible(!document.hidden)
+    document.addEventListener('visibilitychange', handleVisibility)
+    return () => document.removeEventListener('visibilitychange', handleVisibility)
+  }, [])
 
   useEffect(() => {
     const root = rootRef.current
@@ -98,6 +116,7 @@ export function Canvas3DLazy(props: Props) {
         ),
       )
 
+      // Ovde unapred zagrevamo teksture i modele da bi prvi ulazak u 3D bio mirniji.
       const jobs: Promise<unknown>[] = []
       const worktopTexture = getWorktopTextureConfig(props.optionsValues?.worktop)
       if (worktopTexture) jobs.push(primeTextureSet(worktopTexture, quality.worktopTextureMode, quality.textureAnisotropy))
@@ -116,11 +135,13 @@ export function Canvas3DLazy(props: Props) {
     }
   }, [isActivated, isVisible, props.items, props.optionsValues?.worktop, quality])
 
+  const shouldRun = isActivated && isVisible && isDocumentVisible
+
   return (
     <div ref={rootRef} style={{ position: 'absolute', inset: 0 }}>
       <ErrorBoundary fallback={() => <Canvas3DFallback />}>
         <Suspense fallback={<Canvas3DFallback message="Učitavanje 3D prikaza..." />}>
-          <Canvas3D {...props} />
+          <Canvas3D {...props} shouldRun={shouldRun} />
         </Suspense>
       </ErrorBoundary>
     </div>

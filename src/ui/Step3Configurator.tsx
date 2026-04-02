@@ -1,140 +1,46 @@
-import type { KitchenShape, Walls, PlacedItem, WallKey } from '../domain/types'
-import type { CatalogElement } from '../domain/catalog/catalogTypes'
-import { getCornerWorktopMetaByElementId } from '../domain/catalog/cornerWorktop'
+import type { KitchenShape, PlacedItem, WallKey, Walls } from '../domain/types'
 import { getActiveWall } from '../domain/shapes/shared/uiShapeConfig'
 import { computeRenderItemsByShape, computeActiveStatsByShape } from '../domain/shapes/shared/step3Derivations'
-import { removePlacedItem, tryPlaceItemStrict, validateAndPlaceAsync } from '../domain/placement/placementService'
-import React, { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLayoutHistory } from './step3/useLayoutHistory'
 import { useMediaQuery } from './useMediaQuery'
-import { DEFAULT_OPTIONS } from './options/config'
 import type { OptionTab, OptionsValues } from './options/types'
-import { v4 as uuidv4 } from 'uuid'
 import type { Drawer, Subcat } from './step3/types'
 import { InfoDialog, ConfirmDialog } from './step3/dialogs'
 import { Step3Header } from './step3/Step3Header'
 import { markPerf } from '../engine3d/metrics/perf'
 import { Step3DesktopChrome } from './step3/Step3DesktopChrome'
 import { Step3MobileChrome } from './step3/Step3MobileChrome'
-import { readStep3Snapshot, writeStep3Snapshot } from './step3/snapshot'
-
-const ORDER_PLACEHOLDER_MESSAGE = 'Slanje porudžbine još nije aktivirano u ovoj verziji aplikacije.'
-const DEFAULT_DECOR = 'Bela'
-const STEP3_SCENE_LOADING_MESSAGE = 'Učitavanje 3D scene, molimo sačekajte'
-const ITEM_LOADING_MESSAGE = 'Učitavanje, molimo sačekajte'
-const ITEM_ADD_ERROR_MESSAGE = 'Trenutno nije moguće dodati element. Pokušajte ponovo.'
-const MIN_SCENE_LOADING_MS = 1000
-const MIN_ITEM_LOADING_MS = 500
+import {
+  ITEM_LOADING_MESSAGE,
+  STEP3_SCENE_LOADING_MESSAGE,
+  applyDecorToGroup,
+  buildInitialStep3View,
+  type DecorByGroup,
+  type DecorGroup,
+} from './step3/configuratorShared'
+import { useStep3Actions } from './step3/useStep3Actions'
+import { useStep3SceneLoading } from './step3/useStep3SceneLoading'
+import { useStep3SnapshotPersistence } from './step3/useStep3SnapshotPersistence'
 
 const Canvas3DLazy = lazy(() => import('../engine3d/Canvas3DLazy').then((m) => ({ default: m.Canvas3DLazy })))
-
-type DecorGroup = Extract<Subcat, 'Donji' | 'Gornji' | 'Visoki'>
-type DecorByGroup = Record<DecorGroup, string>
-
-function isDecorGroup(value: Subcat): value is DecorGroup {
-  return value === 'Donji' || value === 'Gornji' || value === 'Visoki'
-}
-
-function getDecorGroupForItem(item: PlacedItem): DecorGroup | null {
-  const supportRole = item.supportRole
-  if (supportRole === 'base') return 'Donji'
-  if (supportRole === 'wall') return 'Gornji'
-
-  const catalogId = String(item.catalogId || '').toLowerCase()
-  if (catalogId === 'base') return 'Donji'
-  if (catalogId === 'wall') return 'Gornji'
-  if (catalogId === 'tall') return 'Visoki'
-  if (catalogId !== 'corner') return null
-
-  const category = String(item.category || '').toLowerCase()
-  if (category === 'base') return 'Donji'
-  if (category === 'wall') return 'Gornji'
-  return null
-}
-
-function applyDecorToGroup(items: PlacedItem[], group: DecorGroup, decor: string): { items: PlacedItem[]; changed: boolean } {
-  let changed = false
-  const nextItems = items.map((item) => {
-    if (getDecorGroupForItem(item) !== group) return item
-    if ((item.decor ?? DEFAULT_DECOR) === decor) return item
-    changed = true
-    return { ...item, decor }
-  })
-  return { items: nextItems, changed }
-}
-
-function supportsWorktop(item: PlacedItem): boolean {
-  const supportRole = item.supportRole
-  if (supportRole === 'base') return true
-  if (supportRole === 'wall') return false
-
-  const catalogId = String(item.catalogId || '').toLowerCase()
-  if (catalogId === 'base') return true
-  if (catalogId !== 'corner') return false
-  return String(item.category || '').toLowerCase() === 'base'
-}
-
-function makeSupportPlaceholder(item: PlacedItem): PlacedItem {
-  return {
-    ...item,
-    uniqueId: `__support__${item.uniqueId}`,
-    catalogId: '__support__',
-    supportRole: getDecorGroupForItem(item) === 'Gornji' ? 'wall' : 'base',
-    supportSourceCatalogId: String(item.catalogId || ''),
-    worktopMeta: String(item.catalogId || '').toLowerCase() === 'corner'
-      ? (getCornerWorktopMetaByElementId(String(item.elementId || '')) ?? item.worktopMeta)
-      : undefined,
-  }
-}
-
-function buildInitialStep3View(shape: KitchenShape, walls: Walls) {
-  const snapshot = readStep3Snapshot(shape, walls)
-  if (!snapshot) {
-    return {
-      drawer: 'none' as Drawer,
-      optionTab: null as OptionTab,
-      optionsValues: DEFAULT_OPTIONS,
-      decorByGroup: { Donji: DEFAULT_DECOR, Gornji: DEFAULT_DECOR, Visoki: DEFAULT_DECOR } as DecorByGroup,
-      activeElementsSubcat: (shape === 'l-shape' ? 'Ugao' : 'Donji') as Subcat,
-      activeDecorGroup: 'Donji' as DecorGroup,
-      targetWall: 'A' as WallKey,
-      selectedItemId: null as string | null,
-      elementsScrollTop: 0,
-      optionsScrollTop: 0,
-    }
-  }
-
-  return {
-    drawer: snapshot.ui.drawer,
-    optionTab: snapshot.ui.optionTab,
-    optionsValues: snapshot.optionsValues,
-    decorByGroup: snapshot.decorByGroup,
-    activeElementsSubcat: snapshot.ui.activeElementsSubcat,
-    activeDecorGroup: snapshot.ui.activeDecorGroup,
-    targetWall: snapshot.ui.targetWall,
-    selectedItemId: snapshot.ui.selectedItemId,
-    elementsScrollTop: snapshot.ui.elementsScrollTop,
-    optionsScrollTop: snapshot.ui.optionsScrollTop,
-  }
-}
 
 export function Step3Configurator({
   shape,
   walls,
   onBack,
-  onNext,
   onResetAll,
 }: {
   shape: KitchenShape
   walls: Walls
   onBack: () => void
-  onNext: () => void
   onResetAll: () => void
 }) {
   const isDesktop = useMediaQuery('(min-width: 1026px)')
   const isLandscape = useMediaQuery('(orientation: landscape)')
   const isPreviewOnlyLandscape = !isDesktop && isLandscape
   const initialView = useMemo(() => buildInitialStep3View(shape, walls), [shape, walls])
+
   const [drawer, setDrawer] = useState<Drawer>(() => initialView.drawer)
   const closeDrawer = () => setDrawer('none')
   const [optionTab, setOptionTab] = useState<OptionTab>(() => initialView.optionTab)
@@ -146,13 +52,6 @@ export function Step3Configurator({
   const [selectedItemId, setSelectedItemId] = useState<string | null>(() => initialView.selectedItemId)
   const [elementsScrollTop, setElementsScrollTop] = useState<number>(() => initialView.elementsScrollTop)
   const [optionsScrollTop, setOptionsScrollTop] = useState<number>(() => initialView.optionsScrollTop)
-  const [alertMsg, setAlertMsg] = useState<string | null>(null)
-  const [showBackConfirm, setShowBackConfirm] = useState(false)
-  const [showResetConfirm, setShowResetConfirm] = useState(false)
-  const [showWorktopRemoveConfirm, setShowWorktopRemoveConfirm] = useState(false)
-  const [sceneLoading, setSceneLoading] = useState(true)
-  const [itemLoading, setItemLoading] = useState(false)
-  const pendingWorktopRemovalRef = useRef<null | (() => void)>(null)
 
   const isIShape = shape === 'straight'
   const availableWalls: WallKey[] = useMemo(() => (shape === 'straight' ? ['A'] : ['A', 'B']), [shape])
@@ -179,8 +78,6 @@ export function Step3Configurator({
   } = useLayoutHistory(shape, walls)
 
   const placedItemsRef = useRef<PlacedItem[]>(placedItems)
-  const addingRef = useRef(false)
-  const sceneLoadSequenceRef = useRef(0)
 
   useEffect(() => {
     placedItemsRef.current = placedItems
@@ -200,17 +97,6 @@ export function Step3Configurator({
     setOptionsScrollTop(restored.optionsScrollTop)
   }, [shape, walls, contextKey])
 
-  useEffect(() => {
-    if (!isPreviewOnlyLandscape) return
-    setDrawer('none')
-    setAlertMsg(null)
-    setShowBackConfirm(false)
-    setShowResetConfirm(false)
-    setShowWorktopRemoveConfirm(false)
-    pendingWorktopRemovalRef.current = null
-    setSelectedItemId(null)
-  }, [isPreviewOnlyLandscape])
-
 
   const renderItems: PlacedItem[] = useMemo(
     () => computeRenderItemsByShape(shape, placedItems, optionsValues),
@@ -224,6 +110,60 @@ export function Step3Configurator({
       .join('|'),
     [renderItems],
   )
+
+  const sceneLoading = useStep3SceneLoading({
+    shape,
+    walls,
+    contextKey: `${contextKey}|${sceneAssetKey}`,
+    renderItems,
+  })
+
+  const {
+    alertMsg,
+    setAlertMsg,
+    showBackConfirm,
+    setShowBackConfirm,
+    showResetConfirm,
+    setShowResetConfirm,
+    showWorktopRemoveConfirm,
+    itemLoading,
+    handleAddItem,
+    handleBack,
+    handleForward,
+    handleDeleteSelected,
+    handleGlobalReset,
+    handleOrder,
+    handleRequestRemoveWorktop,
+    handleConfirmRemoveWorktop,
+    handleCancelRemoveWorktop,
+    resetTransientUi,
+  } = useStep3Actions({
+    shape,
+    walls,
+    placedItems,
+    placedItemsRef,
+    targetWall,
+    optionsValues,
+    selectedItemId,
+    setSelectedItemId,
+    isDesktop,
+    setDrawer,
+    sceneLoading,
+    pushState,
+    canUndo,
+    canRedo,
+    undo,
+    redo,
+    resetLayout,
+    onBack,
+    onResetAll,
+  })
+
+
+  useEffect(() => {
+    if (!isPreviewOnlyLandscape) return
+    resetTransientUi()
+  }, [isPreviewOnlyLandscape, resetTransientUi])
 
   useEffect(() => {
     setSelectedItemId((current) => {
@@ -243,7 +183,7 @@ export function Step3Configurator({
 
     if (next.decor !== previous.decor) {
       const group = activeDecorGroup
-      const decor = next.decor || DEFAULT_DECOR
+      const decor = next.decor || 'Bela'
       setDecorByGroup((current) => (current[group] === decor ? current : { ...current, [group]: decor }))
 
       const result = applyDecorToGroup(placedItemsRef.current, group, decor)
@@ -269,263 +209,27 @@ export function Step3Configurator({
     [activeStats]
   )
 
-  const handleAddItem = async (catalogItem: CatalogElement) => {
-    if (addingRef.current || sceneLoading || itemLoading) return
-    addingRef.current = true
-    setItemLoading(true)
-    const startedAt = Date.now()
-    const uniqueId = uuidv4()
-
-    const finishLoading = async () => {
-      const remaining = MIN_ITEM_LOADING_MS - (Date.now() - startedAt)
-      if (remaining > 0) await new Promise((resolve) => window.setTimeout(resolve, remaining))
-      setItemLoading(false)
-      addingRef.current = false
-    }
-
-    try {
-      const strictResult = tryPlaceItemStrict({
-        shape,
-        walls,
-        placedItems: placedItemsRef.current,
-        catalogItem,
-        targetWall,
-        uniqueId,
-      })
-
-      if (strictResult.ok === false) {
-        setAlertMsg(strictResult.message ?? 'Greška pri postavljanju.')
-        await finishLoading()
-        return
-      }
-
-      const validated = await validateAndPlaceAsync({
-        shape,
-        walls,
-        placedItems: placedItemsRef.current,
-        catalogItem,
-        targetWall,
-        uniqueId,
-      })
-
-      if (!validated.ok) {
-        setAlertMsg(validated.message ?? 'Greška pri postavljanju.')
-        await finishLoading()
-        return
-      }
-
-      const preparedItem = { ...validated.item, decor: validated.item.decor ?? DEFAULT_DECOR, glbUrl: catalogItem.glb || validated.item.glbUrl }
-      const preloadTarget = computeRenderItemsByShape(shape, [...placedItemsRef.current, preparedItem], optionsValues)
-      const { preloadSceneAssetsForItems } = await import('../engine3d/modelLoader')
-      const preloadResult = await Promise.allSettled([preloadSceneAssetsForItems(preloadTarget)])
-      const failed = preloadResult.some((result) => result.status === 'rejected')
-      if (failed) {
-        setAlertMsg(ITEM_ADD_ERROR_MESSAGE)
-        await finishLoading()
-        return
-      }
-
-      pushState([...placedItemsRef.current, preparedItem])
-      setSelectedItemId(null)
-      if (!isDesktop) setDrawer('none')
-      await finishLoading()
-    } catch {
-      setAlertMsg(ITEM_ADD_ERROR_MESSAGE)
-      await finishLoading()
-    }
-  }
-
-  const handleBack = () => {
-    if (sceneLoading || itemLoading) return
-    if (canUndo) {
-      undo()
-      setSelectedItemId(null)
-      return
-    }
-    setShowBackConfirm(true)
-  }
-
-  const handleForward = () => {
-    if (sceneLoading || itemLoading) return
-    if (!canRedo) return
-    redo()
-    setSelectedItemId(null)
-  }
-
-  const handleDeleteSelected = () => {
-    if (sceneLoading || itemLoading) return
-    if (!selectedItemId) return
-    const selectedItem = placedItems.find((item) => item.uniqueId === selectedItemId)
-    if (!selectedItem) return
-
-    const removeElementAndWorktop = () => {
-      const nextItems = removePlacedItem(placedItems, selectedItemId)
-      pushState(nextItems)
-      setSelectedItemId(null)
-    }
-
-    if (optionsValues.worktop !== 'Bez Radne ploče' && supportsWorktop(selectedItem)) {
-      pendingWorktopRemovalRef.current = removeElementAndWorktop
-      setShowWorktopRemoveConfirm(true)
-      return
-    }
-
-    removeElementAndWorktop()
-  }
-
-  const handleGlobalReset = () => {
-    if (sceneLoading || itemLoading) return
-    resetLayout()
-    setSelectedItemId(null)
-    onResetAll()
-    setShowResetConfirm(false)
-  }
-
-  const handleOrder = () => {
-    if (sceneLoading || itemLoading) return
-    setAlertMsg(ORDER_PLACEHOLDER_MESSAGE)
-  }
-
-  const handleRequestRemoveWorktop = (apply: () => void) => {
-    if (sceneLoading || itemLoading) return
-    pendingWorktopRemovalRef.current = apply
-    setShowWorktopRemoveConfirm(true)
-  }
-
-  const handleConfirmRemoveWorktop = () => {
-    if (sceneLoading || itemLoading) return
-    const apply = pendingWorktopRemovalRef.current
-    pendingWorktopRemovalRef.current = null
-    setShowWorktopRemoveConfirm(false)
-    if (apply) apply()
-  }
-
-  const handleCancelRemoveWorktop = () => {
-    if (sceneLoading || itemLoading) return
-    const selectedItem = selectedItemId ? placedItems.find((item) => item.uniqueId === selectedItemId) : null
-    pendingWorktopRemovalRef.current = null
-    setShowWorktopRemoveConfirm(false)
-
-    if (selectedItemId && selectedItem && optionsValues.worktop !== 'Bez Radne ploče' && supportsWorktop(selectedItem)) {
-      const withoutSelected = removePlacedItem(placedItems, selectedItemId)
-      pushState([...withoutSelected, makeSupportPlaceholder(selectedItem)])
-      setSelectedItemId(null)
-    }
-  }
-
-
-  useEffect(() => {
-    const sequence = ++sceneLoadSequenceRef.current
-    const startedAt = Date.now()
-    setSceneLoading(true)
-
-    let cancelled = false
-    ;(async () => {
-      try {
-        const { preloadSceneAssetsForItems } = await import('../engine3d/modelLoader')
-        await preloadSceneAssetsForItems(renderItems)
-      } finally {
-        const remaining = MIN_SCENE_LOADING_MS - (Date.now() - startedAt)
-        if (remaining > 0) await new Promise((resolve) => window.setTimeout(resolve, remaining))
-        if (cancelled || sequence !== sceneLoadSequenceRef.current) return
-        setSceneLoading(false)
-      }
-    })()
-
-    return () => {
-      cancelled = true
-    }
-  }, [shape, walls, contextKey])
-
   useEffect(() => {
     if (!sceneLoading && !itemLoading) return
     const active = document.activeElement
     if (active instanceof HTMLElement) active.blur()
-  }, [sceneLoading, itemLoading])
+  }, [itemLoading, sceneLoading])
 
-  useLayoutEffect(() => {
-    writeStep3Snapshot({
-      version: 1 as const,
-      shape,
-      walls,
-      items: placedItems,
-      optionsValues,
-      decorByGroup,
-      ui: {
-        drawer,
-        optionTab,
-        activeElementsSubcat,
-        activeDecorGroup,
-        targetWall,
-        selectedItemId: selectedItemId && placedItems.some((item) => item.uniqueId === selectedItemId) ? selectedItemId : null,
-        elementsScrollTop,
-        optionsScrollTop,
-      },
-    })
-  }, [
-    activeDecorGroup,
-    activeElementsSubcat,
+  useStep3SnapshotPersistence({
+    shape,
+    walls,
+    placedItems,
+    optionsValues,
     decorByGroup,
     drawer,
     optionTab,
-    optionsValues,
-    placedItems,
-    selectedItemId,
-    shape,
-    targetWall,
-    walls,
-    elementsScrollTop,
-    optionsScrollTop,
-  ])
-
-  useEffect(() => {
-    const flush = () => writeStep3Snapshot({
-      version: 1 as const,
-      shape,
-      walls,
-      items: placedItems,
-      optionsValues,
-      decorByGroup,
-      ui: {
-        drawer,
-        optionTab,
-        activeElementsSubcat,
-        activeDecorGroup,
-        targetWall,
-        selectedItemId: selectedItemId && placedItems.some((item) => item.uniqueId === selectedItemId) ? selectedItemId : null,
-        elementsScrollTop,
-        optionsScrollTop,
-      },
-    })
-
-    const onVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') flush()
-    }
-
-    window.addEventListener('pagehide', flush)
-    window.addEventListener('beforeunload', flush)
-    document.addEventListener('visibilitychange', onVisibilityChange)
-
-    return () => {
-      window.removeEventListener('pagehide', flush)
-      window.removeEventListener('beforeunload', flush)
-      document.removeEventListener('visibilitychange', onVisibilityChange)
-    }
-  }, [
-    activeDecorGroup,
     activeElementsSubcat,
-    decorByGroup,
-    drawer,
-    optionTab,
-    optionsValues,
-    placedItems,
-    selectedItemId,
-    shape,
+    activeDecorGroup,
     targetWall,
-    walls,
+    selectedItemId,
     elementsScrollTop,
     optionsScrollTop,
-  ])
+  })
 
   useEffect(() => {
     markPerf('step3EnteredAt')

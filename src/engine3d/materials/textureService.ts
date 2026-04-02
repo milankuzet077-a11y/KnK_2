@@ -1,4 +1,17 @@
 import { NoColorSpace, SRGBColorSpace, TextureLoader } from 'three'
+
+/*
+ * Putanja: src/engine3d/materials/textureService.ts
+ *
+ * Zadužen za učitavanje i pripremu tekstura.
+ * Ovde se odlučuje:
+ * - koja mapa se učitava
+ * - koji prostor boja koristi
+ * - kolika je anizotropija
+ * - da li se vraća samo osnovna slika ili pun skup mapa
+ *
+ * Ako dekor izgleda isprano, preoštro, mutno ili preteško za uređaj, ovaj fajl je važan za proveru.
+ */
 import type { ColorSpace, Texture } from 'three'
 import type { TextureSetConfig } from './catalog'
 
@@ -16,12 +29,16 @@ const loader = new TextureLoader()
 const textureSetCache = new Map<string, LoadedTextureSet>()
 const texturePromiseCache = new Map<string, Promise<LoadedTextureSet>>()
 
+// Završna priprema teksture pre upotrebe: boje, filtriranje i osvežavanje.
 function finalizeTexture(texture: Texture, colorSpace: ColorSpace, anisotropy: number) {
+  // Albedo mapa ide u sRGB, dok pomoćne mape idu bez korekcije boje.
   texture.colorSpace = colorSpace
+  // Veća anizotropija daje oštriji dekor kada se gleda ukoso.
   texture.anisotropy = anisotropy
   texture.needsUpdate = Boolean((texture as Texture & { image?: unknown }).image)
 }
 
+// Svaki materijal dobija sopstvenu kopiju teksture da bi repeat, offset i rotacija mogli bezbedno da se menjaju.
 function cloneTexture(texture?: Texture): Texture | undefined {
   if (!texture) return undefined
   const clone = texture.clone()
@@ -40,6 +57,7 @@ function cloneTextureSet(set: LoadedTextureSet): LoadedTextureSet {
   }
 }
 
+// Učitava jednu teksturu sa zadate putanje.
 function loadTexture(url: string, colorSpace: ColorSpace, anisotropy = 4): Promise<Texture> {
   return new Promise((resolve, reject) => {
     loader.load(
@@ -54,7 +72,9 @@ function loadTexture(url: string, colorSpace: ColorSpace, anisotropy = 4): Promi
   })
 }
 
+// Sastavlja komplet mapa za jedan materijal: osnovna slika, pa po potrebi roughness i normal.
 async function buildTextureSet(config: TextureSetConfig, detailLevel: DetailLevel, anisotropy: number): Promise<LoadedTextureSet> {
+  // U lakšem režimu učitava se samo osnovna slika; pune mape se čuvaju za jači kvalitet.
   const shouldLoadDetailMaps = detailLevel === 'full'
   const [albedo, roughness, normal] = await Promise.all([
     loadTexture(config.albedo, SRGBColorSpace, anisotropy),

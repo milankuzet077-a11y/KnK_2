@@ -1,4 +1,16 @@
 import { Box3 } from 'three'
+
+/*
+ * Putanja: src/engine3d/modelLoader.ts
+ *
+ * Učitava GLB modele i odmah ih priprema za ispravan prikaz.
+ * Ovde je posebno važno:
+ * - da li model baca i prima senku
+ * - kako se prepoznaje tip površine
+ * - koji UV raspored se dodeljuje frontovima, bočnim stranicama i radnoj ploči
+ *
+ * Ako ista tekstura izgleda dobro na stranici, a loše na frontu, često je trag baš ovde.
+ */
 import type { Group, Mesh, Object3D } from 'three'
 import { applyPlanarUvProjection } from './utils/uvProjection'
 import type { RenderableItem } from './shared'
@@ -66,6 +78,7 @@ function normalizeName(value: string): string {
     .replace(/đ/g, 'd')
 }
 
+// Po nazivu mreže i materijala pogađa koji tip UV rasporeda treba da dobije površina.
 function resolveUvOrientation(mesh: Mesh): 'front-vertical' | 'top-horizontal' | 'board-vertical' | 'board-horizontal' | null {
   const rawMeshName = String(mesh.name || '')
   const meshName = normalizeName(rawMeshName)
@@ -117,17 +130,21 @@ function resolveUvOrientation(mesh: Mesh): 'front-vertical' | 'top-horizontal' |
   return null
 }
 
+// Priprema sve mreže modela da pravilno učestvuju u osvetljenju, senkama i teksturama.
 function standardizeModelMeshes(group: Group) {
   group.traverse((child: Object3D) => {
     const mesh = child as Mesh
     if (!mesh.isMesh) return
+    // Mreža baca senku na druge površine.
     mesh.castShadow = true
+    // Mreža prima senku od drugih delova scene.
     mesh.receiveShadow = true
 
     const orientation = resolveUvOrientation(mesh)
     if (!orientation) return
 
     mesh.geometry = mesh.geometry.clone()
+    // Dodela ili prepravka UV rasporeda direktno menja kako će tekstura 'leći' na model.
     applyPlanarUvProjection(mesh, orientation)
   })
 }
@@ -149,7 +166,6 @@ async function loadModelInternal(url: string): Promise<Group> {
         url,
         (gltf) => {
           const scene = gltf.scene
-          if (/\/corner\//.test(url)) normalizeCornerPivotToJoinXZ(scene)
           standardizeModelMeshes(scene)
 
           modelCache.set(url, scene)

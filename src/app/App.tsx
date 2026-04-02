@@ -19,7 +19,6 @@ const STORAGE_KEYS = {
   walls: 'amk_walls',
   wallInputs: 'amk_wall_inputs',
   progress: 'amk_progress',
-  version: 'amk_storage_version',
   snapshot: 'amk_app_snapshot',
 } as const
 
@@ -147,12 +146,11 @@ function writeProgressToStorage(p: Progress) {
 
 function writeSnapshotToStorage(shape: KitchenShape, walls: Walls, wallInputs: WallInputs, progress: Progress) {
   try {
-    const canonicalWalls = canonicalizeWalls(shape, walls) ?? getDefaultWallsForShape(shape)
     const payload: AppSnapshot = {
       version: STORAGE_VERSION,
       shape,
-      walls: canonicalWalls,
-      wallInputs: parseStoredWallInputs(wallInputs, buildWallInputs(shape, canonicalWalls)),
+      walls,
+      wallInputs,
       progress,
     }
     localStorage.setItem(STORAGE_KEYS.snapshot, JSON.stringify(payload))
@@ -162,15 +160,13 @@ function writeSnapshotToStorage(shape: KitchenShape, walls: Walls, wallInputs: W
 function persistAppState(params: { shape: KitchenShape; walls: Walls; wallInputs?: WallInputs; progress: Progress }) {
   const { shape, walls, wallInputs, progress } = params
   const canonicalWalls = canonicalizeWalls(shape, walls) ?? getDefaultWallsForShape(shape)
+  const nextWallInputs = parseStoredWallInputs(wallInputs, buildWallInputs(shape, canonicalWalls))
   try {
     localStorage.setItem(STORAGE_KEYS.shape, String(shape))
     localStorage.setItem(STORAGE_KEYS.walls, JSON.stringify(canonicalWalls))
-    localStorage.setItem(
-      STORAGE_KEYS.wallInputs,
-      JSON.stringify(parseStoredWallInputs(wallInputs, buildWallInputs(shape, canonicalWalls)))
-    )
+    localStorage.setItem(STORAGE_KEYS.wallInputs, JSON.stringify(nextWallInputs))
     writeProgressToStorage(progress)
-    writeSnapshotToStorage(shape, canonicalWalls, parseStoredWallInputs(wallInputs, buildWallInputs(shape, canonicalWalls)), progress)
+    writeSnapshotToStorage(shape, canonicalWalls, nextWallInputs, progress)
   } catch {}
 }
 
@@ -186,6 +182,13 @@ function clearAllLayoutKeys() {
   } catch {}
 }
 
+function clearPersistedLayoutData() {
+  try {
+    clearAllLayoutKeys()
+    clearAllStep3Snapshots()
+  } catch {}
+}
+
 function clearAllStorage() {
   try {
     localStorage.removeItem(STORAGE_KEYS.shape)
@@ -193,29 +196,16 @@ function clearAllStorage() {
     localStorage.removeItem(STORAGE_KEYS.wallInputs)
     localStorage.removeItem(STORAGE_KEYS.progress)
     localStorage.removeItem(STORAGE_KEYS.snapshot)
-    localStorage.removeItem(STORAGE_KEYS.version)
-    clearAllLayoutKeys()
-    clearAllStep3Snapshots()
+    localStorage.removeItem('amk_storage_version')
+    clearPersistedLayoutData()
   } catch {}
 }
 
 function clearLayoutStorage() {
-  try {
-    clearAllLayoutKeys()
-    clearAllStep3Snapshots()
-  } catch {}
+  clearPersistedLayoutData()
 }
 
-function ensureStorageVersion() {
-  try {
-    const current = localStorage.getItem(STORAGE_KEYS.version)
-    if (current !== STORAGE_VERSION) {
-      localStorage.setItem(STORAGE_KEYS.version, STORAGE_VERSION)
-    }
-  } catch {}
-}
-
-function updateViewportForStep(step: Step) {
+function updateViewportForStep() {
   if (typeof document === 'undefined') return
   let viewport = document.querySelector('meta[name="viewport"]') as HTMLMetaElement | null
   if (!viewport) {
@@ -306,12 +296,12 @@ function readInitialAppState() {
 }
 
 export function App() {
-  const initialState = readInitialAppState()
-  const [progress, setProgress] = useState<Progress>(() => initialState.progress)
+  const [initialState] = useState(readInitialAppState)
+  const [progress, setProgress] = useState<Progress>(initialState.progress)
   const [step, setStep] = useState<Step>(() => computeInitialStep(readStepFromUrl(), initialState.progress))
-  const [shape, setShape] = useState<KitchenShape>(() => initialState.shape)
-  const [walls, setWalls] = useState<Walls>(() => initialState.walls)
-  const [wallInputs, setWallInputs] = useState<WallInputs>(() => initialState.wallInputs)
+  const [shape, setShape] = useState<KitchenShape>(initialState.shape)
+  const [walls, setWalls] = useState<Walls>(initialState.walls)
+  const [wallInputs, setWallInputs] = useState<WallInputs>(initialState.wallInputs)
 
 
   useEffect(() => {
@@ -331,13 +321,9 @@ export function App() {
     }
   }, [])
 
-  useLayoutEffect(() => {
-    ensureStorageVersion()
-    persistAppState({ shape, walls, wallInputs, progress })
-  }, [])
 
   useEffect(() => {
-    updateViewportForStep(step)
+    updateViewportForStep()
 
     const preventGesture = (event: Event) => {
       if (step === 3 && isInsideSceneZoomRoot(event.target)) return
@@ -392,17 +378,6 @@ export function App() {
     }
   }, [shape, walls, wallInputs, progress])
 
-  useEffect(() => {
-    const fromUrl = readStepFromUrl()
-    const nextStep = computeInitialStep(fromUrl, progress)
-    if (nextStep !== step) setStep(nextStep)
-  }, [])
-
-
-
-
-
-
 
   if (step === 1) {
     return (
@@ -412,7 +387,6 @@ export function App() {
           const nextProgress = { hasShape: true, hasWalls: false }
           const nextWalls = getDefaultWallsForShape(s)
           const nextWallInputs = buildWallInputs(s, nextWalls)
-          persistAppState({ shape: s, walls: nextWalls, wallInputs: nextWallInputs, progress: nextProgress })
           setShape(s)
           setWalls(nextWalls)
           setWallInputs(nextWallInputs)
@@ -434,7 +408,6 @@ export function App() {
           const nextProgress = { ...progress, hasWalls: true }
           const nextWalls = canonicalizeWalls(shape, w) ?? getDefaultWallsForShape(shape)
           const nextWallInputs = parseStoredWallInputs(rawInputs, buildWallInputs(shape, nextWalls))
-          persistAppState({ shape, walls: nextWalls, wallInputs: nextWallInputs, progress: nextProgress })
           setWalls(nextWalls)
           setWallInputs(nextWallInputs)
           setProgress(nextProgress)
@@ -461,7 +434,6 @@ export function App() {
           shape={shape}
           walls={walls}
           onBack={() => setStep(2)}
-          onNext={() => {}}
           onResetAll={() => {
             void clearPwaRuntimeData()
             clearAllStorage()

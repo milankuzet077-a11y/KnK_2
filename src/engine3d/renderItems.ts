@@ -1,5 +1,13 @@
 import type { KitchenShape, Walls } from '../domain/types'
-import { createVirtualItemMesh, positionModel } from './itemPlacement'
+
+/*
+ * Putanja: src/engine3d/renderItems.ts
+ *
+ * Ovaj fajl ne pravi direktno svetlo ili materijale, ali određuje redosled u kom se modeli učitavaju
+ * i kada se za frontove unapred računa plan isečaka dekora.
+ * Zato indirektno utiče na konačan izgled frontova.
+ */
+import { createVirtualItemMesh, positionModel, setFrontDecorSlicePlan } from './itemPlacement'
 import type { RenderableItem } from './shared'
 import { disposeDisposableSubtree } from './shared'
 import type { SceneRuntime } from './sceneRuntime'
@@ -57,6 +65,9 @@ export function renderSceneItems({ runtime, items, optionsValues, shape, walls, 
   }
 
   const wallAMm = Number(walls.A || 0)
+
+  // Pre učitavanja modela pravimo plan kako će drvna šara biti isečena po frontovima.
+  setFrontDecorSlicePlan(items, optionsValues?.decor)
 
   items.forEach((item) => {
     const virtualRenderable = createVirtualItemMesh(shape, wallAMm, item, optionsValues, requestRender)

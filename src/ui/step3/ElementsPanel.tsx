@@ -26,6 +26,8 @@ function isBaseOrTallKind(kind: string): boolean {
 
 const WALL_SWITCHER_STICKY_TOP = 0
 const WALL_SWITCHER_HEIGHT = 54
+const RED_FRAME = '1px solid rgba(244,71,85,.32)'
+const RED_FILL = 'rgba(244,71,85,.12)'
 
 export function ElementsPanel({
   shape,
@@ -102,8 +104,26 @@ export function ElementsPanel({
   })
 
   React.useEffect(() => {
-    setOpenSubcat(placedItems.length > 0 ? subcat : (isLShape ? 'Ugao' : null))
-  }, [isLShape, placedItems.length, shape, subcat])
+    setOpenSubcat((current) => {
+      if (placedItems.length > 0) return subcat
+
+      if (isLShape) {
+        if (current === null) return 'Ugao'
+
+        const currentUnlocked = current === 'Ugao'
+          || ((current === 'Donji' || current === 'Visoki') && lowerUnlocked)
+          || (current === 'Gornji' && upperUnlocked)
+
+        return currentUnlocked ? current : 'Ugao'
+      }
+
+      if ((isIShape || isParallel) && current === 'Ugao') {
+        return subcat === 'Ugao' ? 'Donji' : subcat
+      }
+
+      return current
+    })
+  }, [isIShape, isParallel, isLShape, lowerUnlocked, upperUnlocked, placedItems.length, subcat])
 
 
   const filteredByOpenSubcat = React.useMemo(() => {
@@ -153,8 +173,8 @@ export function ElementsPanel({
             style={{
               padding: '10px 12px',
               borderRadius: 14,
-              border: '1px solid rgba(214,179,106,.28)',
-              background: 'rgba(214,179,106,.10)',
+              border: RED_FRAME,
+              background: RED_FILL,
               color: 'rgba(255,255,255,.92)',
               lineHeight: 1.35
             }}
@@ -169,6 +189,9 @@ export function ElementsPanel({
 
         {!isIShape && (
           <>
+            <div className="hint" style={{ fontSize: 12, opacity: 0.9 }}>
+              Izaberite zid na koji dodajete elemente
+            </div>
             <div
               style={{
                 position: 'sticky',
@@ -205,9 +228,6 @@ export function ElementsPanel({
                   </button>
                 )
               })}
-            </div>
-            <div className="hint" style={{ fontSize: 12, opacity: 0.75 }}>
-              Izaberite zid na koji postavljate element.
             </div>
           </>
         )}

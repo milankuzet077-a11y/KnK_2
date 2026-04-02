@@ -11,6 +11,14 @@ type DetailState = {
   item: OptionItemDef
 } | null
 
+const RED_FRAME = '1px solid rgba(244,71,85,.32)'
+const RED_FILL = 'rgba(244,71,85,.12)'
+
+function hasRedOptionFrame(tabId: OptionTabId, value: string): boolean {
+  return (tabId === 'worktop' && value === 'Bez Radne ploče')
+    || (tabId === 'sink' && value === 'Bez Sudopere')
+}
+
 function OptionDetailsDialog({
   item,
   title,
@@ -83,7 +91,7 @@ function OptionDetailsDialog({
         </div>
 
         <div style={{ display: 'flex', gap: 10 }}>
-          <button className="btn" onClick={onClose} style={{ flex: 1, justifyContent: 'center' }}>
+          <button className="btn danger" onClick={onClose} style={{ flex: 1, justifyContent: 'center' }}>
             Zatvori
           </button>
           <button className={isSelected ? 'btn' : 'btn primary'} onClick={() => { onSelect(); onClose() }} style={{ flex: 1, justifyContent: 'center' }}>
@@ -209,22 +217,26 @@ export function OptionsPanel(props: {
                   ) : (
                     <div style={{ display: 'grid', gap: 10 }}>
                       {t.id === 'decor' && (
-                        <div
-                          style={{
-                            position: 'sticky',
-                            top: 0,
-                            zIndex: 8,
-                            display: 'flex',
-                            gap: 8,
-                            alignItems: 'center',
-                            overflowX: 'auto',
-                            padding: '2px 0 8px',
-                            marginTop: -2,
-                            background: 'linear-gradient(180deg, rgba(15,18,24,.96), rgba(15,18,24,.84), rgba(15,18,24,0))',
-                            backdropFilter: 'blur(10px)',
-                          }}
-                        >
-                          {(['Donji', 'Gornji', 'Visoki'] as DecorTargetGroup[]).map((group) => (
+                        <>
+                          <div className="hint" style={{ fontSize: 12, opacity: 0.9 }}>
+                            Izaberite grupu za promenu dekora
+                          </div>
+                          <div
+                            style={{
+                              position: 'sticky',
+                              top: 0,
+                              zIndex: 8,
+                              display: 'flex',
+                              gap: 8,
+                              alignItems: 'center',
+                              overflowX: 'auto',
+                              padding: '2px 0 8px',
+                              marginTop: -2,
+                              background: 'linear-gradient(180deg, rgba(15,18,24,.96), rgba(15,18,24,.84), rgba(15,18,24,0))',
+                              backdropFilter: 'blur(10px)',
+                            }}
+                          >
+                            {(['Donji', 'Gornji', 'Visoki'] as DecorTargetGroup[]).map((group) => (
                             <button
                               key={group}
                               className="btn"
@@ -234,21 +246,23 @@ export function OptionsPanel(props: {
                                 minHeight: 38,
                                 padding: '8px 10px',
                                 borderRadius: 12,
-                                background: activeDecorGroup === group ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)',
-                                border: '1px solid rgba(255,255,255,0.12)',
+                                background: RED_FILL,
+                                border: RED_FRAME,
                                 whiteSpace: 'nowrap',
                                 fontWeight: 800,
                               }}
                             >
                               {group}
                             </button>
-                          ))}
-                        </div>
+                            ))}
+                          </div>
+                        </>
                       )}
 
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 10 }}>
                         {t.items.map((item) => {
                           const selected = values[t.id] === item.value
+                          const redFrame = hasRedOptionFrame(t.id, item.value)
 
                           if (item.isSimpleOption) {
                             return (
@@ -266,10 +280,16 @@ export function OptionsPanel(props: {
                                   alignItems: 'center',
                                   justifyContent: 'space-between',
                                   gap: 12,
-                                  background: selected ? 'rgba(214,179,106,.18)' : undefined,
-                                  border: selected
-                                    ? '1px solid rgba(214,179,106,.45)'
-                                    : '1px solid rgba(255,255,255,.12)',
+                                  background: redFrame
+                                    ? RED_FILL
+                                    : selected
+                                      ? 'rgba(214,179,106,.18)'
+                                      : undefined,
+                                  border: redFrame
+                                    ? RED_FRAME
+                                    : selected
+                                      ? '1px solid rgba(214,179,106,.45)'
+                                      : '1px solid rgba(255,255,255,.12)',
                                 }}
                                 onClick={() => setValue(t.id, item.value)}
                               >

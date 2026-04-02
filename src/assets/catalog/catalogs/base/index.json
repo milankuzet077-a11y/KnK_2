@@ -18,7 +18,7 @@
         "base",
         "20"
       ],
-      "mountingHeight": 100
+      "mountingHeight": 0
     },
     {
       "id": "r1",
@@ -231,10 +231,29 @@
       },
       {
         "id": "r12",
-        "name": "Fioka 1K D-40",
+        "name": "D-80 2K",
         "type": "base",
         "glb": "/assets/glb/modules/base/r12.glb",
         "thumbnail": "/assets/thumbs/modules/base/r12.png",
+        "dims": {
+          "w": 800,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "800"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r13",
+        "name": "Fioka 1K D-40",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r13.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r13.png",
         "dims": {
           "w": 400,
           "h": 720,
@@ -249,11 +268,11 @@
         "mountingHeight": 0
       },
       {
-        "id": "r13",
+        "id": "r14",
         "name": "Fioka 1K D-45",
         "type": "base",
-        "glb": "/assets/glb/modules/base/r13.glb",
-        "thumbnail": "/assets/thumbs/modules/base/r13.png",
+        "glb": "/assets/glb/modules/base/r14.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r14.png",
         "dims": {
           "w": 450,
           "h": 720,
@@ -269,10 +288,29 @@
       },
       {
         "id": "r15",
-        "name": "Fioka 1K D-60",
+        "name": "Fioka 1K D-50",
         "type": "base",
         "glb": "/assets/glb/modules/base/r15.glb",
         "thumbnail": "/assets/thumbs/modules/base/r15.png",
+        "dims": {
+          "w": 500,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "500"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r16",
+        "name": "Fioka 1K D-60",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r16.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r16.png",
         "dims": {
           "w": 600,
           "h": 720,
@@ -287,11 +325,11 @@
         "mountingHeight": 0
       },
       {
-        "id": "r16",
+        "id": "r17",
         "name": "Fioke 2+1 D-40",
         "type": "base",
-        "glb": "/assets/glb/modules/base/r16.glb",
-        "thumbnail": "/assets/thumbs/modules/base/r16.png",
+        "glb": "/assets/glb/modules/base/r17.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r17.png",
         "dims": {
           "w": 400,
           "h": 720,
@@ -306,11 +344,11 @@
         "mountingHeight": 0
       },
       {
-        "id": "r17",
+        "id": "r18",
         "name": "Fioke 2+1 D-45",
         "type": "base",
-        "glb": "/assets/glb/modules/base/r17.glb",
-        "thumbnail": "/assets/thumbs/modules/base/r17.png",
+        "glb": "/assets/glb/modules/base/r18.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r18.png",
         "dims": {
           "w": 450,
           "h": 720,
@@ -326,10 +364,29 @@
       },
       {
         "id": "r19",
-        "name": "Fioke 2+1 D-60",
+        "name": "Fioke 2+1 D-50",
         "type": "base",
         "glb": "/assets/glb/modules/base/r19.glb",
         "thumbnail": "/assets/thumbs/modules/base/r19.png",
+        "dims": {
+          "w": 500,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "500"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r20",
+        "name": "Fioke 2+1 D-60",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r20.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r20.png",
         "dims": {
           "w": 600,
           "h": 720,
@@ -344,11 +401,11 @@
         "mountingHeight": 0
       },
       {
-        "id": "r20",
+        "id": "r21",
         "name": "Fioke 2+1 D-80",
         "type": "base",
-        "glb": "/assets/glb/modules/base/r20.glb",
-        "thumbnail": "/assets/thumbs/modules/base/r20.png",
+        "glb": "/assets/glb/modules/base/r21.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r21.png",
         "dims": {
           "w": 800,
           "h": 720,
@@ -363,11 +420,11 @@
         "mountingHeight": 0
       },
       {
-        "id": "r21",
+        "id": "r22",
         "name": "Fioke 2/2 D-40",
         "type": "base",
-        "glb": "/assets/glb/modules/base/r21.glb",
-        "thumbnail": "/assets/thumbs/modules/base/r21.png",
+        "glb": "/assets/glb/modules/base/r22.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r22.png",
         "dims": {
           "w": 400,
           "h": 720,
@@ -382,11 +439,11 @@
         "mountingHeight": 0
       },
       {
-        "id": "r22",
+        "id": "r23",
         "name": "Fioke 2/2 D-45",
         "type": "base",
-        "glb": "/assets/glb/modules/base/r22.glb",
-        "thumbnail": "/assets/thumbs/modules/base/r22.png",
+        "glb": "/assets/glb/modules/base/r23.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r23.png",
         "dims": {
           "w": 450,
           "h": 720,
@@ -402,10 +459,29 @@
       },
       {
         "id": "r24",
-        "name": "Fioke 2/2 D-60",
+        "name": "Fioke 2/2 D-50",
         "type": "base",
         "glb": "/assets/glb/modules/base/r24.glb",
         "thumbnail": "/assets/thumbs/modules/base/r24.png",
+        "dims": {
+          "w": 500,
+          "h": 720,
+          "d": 550
+        },
+        "price": 9000,
+        "promoPrice": 7500,
+        "tags": [
+          "base",
+          "500"
+        ],
+        "mountingHeight": 0
+      },
+      {
+        "id": "r25",
+        "name": "Fioke 2/2 D-60",
+        "type": "base",
+        "glb": "/assets/glb/modules/base/r25.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r25.png",
         "dims": {
           "w": 600,
           "h": 720,
@@ -420,11 +496,11 @@
         "mountingHeight": 0
       },
       {
-        "id": "r25",
+        "id": "r26",
         "name": "Fioke 2/2 D-80",
         "type": "base",
-        "glb": "/assets/glb/modules/base/r25.glb",
-        "thumbnail": "/assets/thumbs/modules/base/r25.png",
+        "glb": "/assets/glb/modules/base/r26.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r26.png",
         "dims": {
           "w": 800,
           "h": 720,
@@ -439,11 +515,11 @@
         "mountingHeight": 0
       },
       {
-        "id": "r26",
+        "id": "r27",
         "name": "Panel za sudomašinu D-45",
         "type": "base",
-        "glb": "/assets/glb/modules/base/r26.glb",
-        "thumbnail": "/assets/thumbs/modules/base/r26.png",
+        "glb": "/assets/glb/modules/base/r27.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r27.png",
         "dims": {
           "w": 450,
           "h": 720,
@@ -458,11 +534,11 @@
         "mountingHeight": 0
       },
       {
-        "id": "r27",
+        "id": "r28",
         "name": "Panel za sudomašinu D-60",
         "type": "base",
-        "glb": "/assets/glb/modules/base/r27.glb",
-        "thumbnail": "/assets/thumbs/modules/base/r27.png",
+        "glb": "/assets/glb/modules/base/r28.glb",
+        "thumbnail": "/assets/thumbs/modules/base/r28.png",
         "dims": {
           "w": 600,
           "h": 720,

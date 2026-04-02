@@ -1,3 +1,17 @@
+/*
+ * Putanja: src/engine3d/quality.ts
+ *
+ * Ovaj fajl određuje koliko će scena biti teška ili laka za uređaj.
+ * Ovde se podešavaju stvari koje direktno menjaju konačan izgled:
+ * - gustina crtanja slike (pixel ratio)
+ * - da li su uključene detaljne mape tekstura
+ * - jačina anizotropnog filtriranja tekstura
+ * - broj modela i tekstura koji se unapred pripremaju
+ * - kvalitet i tip senki
+ *
+ * Ako scena deluje mutno, nazubljeno, presporo ili sa grubim senkama,
+ * prvo se proverava ovaj fajl.
+ */
 export type QualityTier = 'low' | 'medium' | 'high'
 export type ShadowQualityMode = 'off' | 'basic' | 'soft'
 
@@ -25,18 +39,29 @@ export type DecorativeEdgeProfile = {
 }
 
 export type QualityProfile = {
+  // Opis profila koji kontroliše izgled i cenu renderovanja scene.
   tier: QualityTier
   capabilities: DeviceCapabilities
+  // Ublažava nazubljene ivice, ali troši više snage.
   antialias: boolean
+  // Najniža gustina crtanja slike koju dozvoljavamo kada scena uspori.
   minPixelRatio: number
+  // Podrazumevana gustina crtanja slike za mirno stanje scene.
   targetPixelRatio: number
+  // Gornja granica gustine crtanja slike. Veći broj daje oštriju sliku, ali više opterećuje uređaj.
   maxPixelRatio: number
+  // Gustina slike dok korisnik pomera kameru; često niža radi glatkijeg rada.
   interactionPixelRatio: number
+  // Da li se pored osnovne slike učitavaju i dodatne mape kao roughness i normal.
   useDetailMaps: boolean
+  // Oštrina teksture kada se površina gleda ukoso. Veća vrednost daje lepši prikaz dekora i radne ploče.
   textureAnisotropy: number
   modelPrefetchLimit: number
+  // Za frontove: samo osnovna slika ili puna kombinacija mapa.
   frontTextureMode: 'albedo' | 'full'
+  // Za radnu ploču: samo osnovna slika ili puna kombinacija mapa.
   worktopTextureMode: 'albedo' | 'full'
+  // Podešavanje senki: da li rade, koliko su velike i koliko su meke.
   shadows: {
     enabled: boolean
     mapSize: number
@@ -87,6 +112,7 @@ function getNavigatorNumber(value: unknown) {
   return Number.isFinite(numeric) ? numeric : 0
 }
 
+// Čita šta uređaj i preglednik realno mogu da podrže za teksture, bafer i filtriranje.
 function readWebGLCapabilities() {
   if (typeof document === 'undefined') {
     return {
@@ -180,6 +206,7 @@ export function getDeviceCapabilities(): DeviceCapabilities {
   return cachedCapabilities
 }
 
+// Gruba procena snage uređaja. Od ove ocene kasnije zavisi koliko lep ili lagan prikaz dobijamo.
 function scoreCapabilities(capabilities: DeviceCapabilities) {
   let score = 0
 
@@ -222,6 +249,7 @@ function pickTier(capabilities: DeviceCapabilities): QualityTier {
   return 'medium'
 }
 
+// Najlepši profil: oštrija slika, pune teksture i mekše senke.
 function createHighProfile(capabilities: DeviceCapabilities): QualityProfile {
   const devicePixelRatio = capabilities.devicePixelRatio
   const maxPixelRatio = roundToQuarter(clamp(Math.min(devicePixelRatio, 3), 1.5, 3))
@@ -242,12 +270,14 @@ function createHighProfile(capabilities: DeviceCapabilities): QualityProfile {
     frontTextureMode: 'full',
     worktopTextureMode: 'full',
     shadows: {
-      enabled: true,
+      //true
+      enabled: false,
       mapSize: capabilities.maxTextureSize >= 8192 ? 2048 : 1024,
       mode: 'soft',
     },
     decorativeEdges: {
-      enabled: true,
+      //true
+      enabled: false,
       thresholdAngle: 32,
       opacity: 0.22,
       color: 0x2c2f34,
@@ -255,6 +285,7 @@ function createHighProfile(capabilities: DeviceCapabilities): QualityProfile {
   }
 }
 
+// Srednji profil: i dalje lep prikaz, ali sa manjom cenom za uređaj.
 function createMediumProfile(capabilities: DeviceCapabilities): QualityProfile {
   const devicePixelRatio = capabilities.devicePixelRatio
   const maxPixelRatio = roundToQuarter(clamp(Math.min(devicePixelRatio, 2.25), 1.25, 2.25))
@@ -288,6 +319,7 @@ function createMediumProfile(capabilities: DeviceCapabilities): QualityProfile {
   }
 }
 
+// Lak profil: manje detalja tekstura, slabije senke i niža gustina prikaza.
 function createLowProfile(capabilities: DeviceCapabilities): QualityProfile {
   const devicePixelRatio = capabilities.devicePixelRatio
   const maxPixelRatio = roundToQuarter(clamp(Math.min(devicePixelRatio, 1.35), 1, 1.35))
@@ -344,6 +376,7 @@ function uniqueRatios(values: number[]) {
   return rounded.filter((value, index) => rounded.findIndex((candidate) => Math.abs(candidate - value) < 0.08) === index)
 }
 
+// Dinamički nivoi kvaliteta za vreme rada: scena može sama da spusti ili podigne izgled prema brzini rada.
 export function buildRuntimeQualityLevels(profile: QualityProfile): RuntimeQualityLevel[] {
   const ratios = profile.tier === 'high'
     ? uniqueRatios([

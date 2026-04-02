@@ -88,9 +88,9 @@ export function Step3MobileChrome({
         </div>
       </div>
       <div className="safe" style={{ position: 'absolute', left: 0, right: 0, bottom: miniBottom }}>
-        <div className="glass" style={{ borderRadius: 20, padding: 8, display: 'flex', gap: 10 }}>
-          <button className="btn" onClick={onBack} style={{ flex: 1 }}>Nazad</button>
-          <button className="btn primary" onClick={onForward} style={{ flex: 1 }} disabled={isForwardDisabled}>Napred</button>
+        <div className="glass" style={{ width: 'fit-content', borderRadius: 20, padding: 8, display: 'flex', gap: 10, alignItems: 'center' }}>
+          <button className="btn" onClick={onBack} aria-label="Undo"><Icon>{I.undo}</Icon></button>
+          <button className="btn primary" onClick={onForward} disabled={isForwardDisabled} aria-label="Redo"><Icon>{I.redo}</Icon></button>
         </div>
       </div>
       <div className="dock glass">
@@ -104,11 +104,11 @@ export function Step3MobileChrome({
           <strong><Icon>{I.sliders}</Icon></strong>
           <span>Opcije</span>
         </button>
-        <button className="dockBtn" onClick={onDeleteSelected} disabled={isDeleteDisabled} style={{ opacity: isDeleteDisabled ? 0.3 : 1 }}>
+        <button className="dockBtn danger" onClick={onDeleteSelected} disabled={isDeleteDisabled} style={{ opacity: isDeleteDisabled ? 0.3 : 1, gridTemplateRows: "1fr" }} aria-label="Obriši" title="Obriši">
           <strong><Icon>{I.trash}</Icon></strong>
           <span>Obriši</span>
         </button>
-        <button className="dockBtn" onClick={onReset}>
+        <button className="dockBtn danger" onClick={onReset}>
           <strong><Icon>{I.reset}</Icon></strong>
           <span>Reset</span>
         </button>
@@ -127,7 +127,7 @@ export function Step3MobileChrome({
         >
           <div className="drawerHeader">
             <div style={{ fontWeight: 900 }}>{drawer === 'elements' ? 'Elementi' : 'Opcije'}</div>
-            <button className="btn" onClick={closeDrawer} style={{ minHeight: 40 }}><Icon>{I.close}</Icon> Zatvori</button>
+            <button className="btn danger" onClick={closeDrawer} style={{ minHeight: 40 }}><Icon>{I.close}</Icon> Zatvori</button>
           </div>
           <div className="drawerBody">
             {drawer === 'elements' ? (

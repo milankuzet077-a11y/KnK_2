@@ -198,6 +198,10 @@ button{ font: inherit; }
   border-color: rgba(214,179,106,.40);
   background: linear-gradient(180deg, rgba(214,179,106,.14), rgba(0,0,0,.18));
 }
+.dockBtn.danger{
+  background: rgba(244,71,85,.12);
+  border-color: rgba(244,71,85,.32);
+}
 
 /* Desktop layout */
 @media (min-width: 901px){

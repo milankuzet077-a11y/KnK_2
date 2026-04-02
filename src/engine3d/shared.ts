@@ -1,4 +1,12 @@
 import type { Material, Mesh, Object3D, Texture } from 'three'
+
+/*
+ * Putanja: src/engine3d/shared.ts
+ *
+ * Pomoćni fajl za čišćenje materijala, tekstura i geometrije.
+ * Ne menja direktno izgled scene, ali je važan da stare teksture i materijali
+ * ne ostanu u memoriji i ne prave čudno ponašanje pri ponovnom renderovanju.
+ */
 import type { PlacedItem, WallKey } from '../domain/types'
 import type { WorktopVirtualItem } from '../domain/shapes/shared/worktopVirtual'
 
@@ -22,6 +30,7 @@ type TextureMapKey =
 
 type TextureBearingMaterial = Material & Partial<Record<TextureMapKey, Texture | null>>
 
+// Spisak svih tipova mapa koje materijal može da nosi i koje moramo pravilno da oslobodimo.
 const TEXTURE_KEYS: TextureMapKey[] = [
   'map',
   'aoMap',
@@ -63,6 +72,7 @@ export function getObjectSelectionId(obj: Object3D): string | null {
   return typeof id === 'string' && id.length > 0 ? id : null
 }
 
+// Bezbedno oslobađa sve teksture i sam materijal kada element nestane iz scene.
 function disposeMaterial(mat: Material) {
   const textureMat = mat as TextureBearingMaterial
   for (const key of TEXTURE_KEYS) {

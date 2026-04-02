@@ -1,9 +1,20 @@
 import { BufferAttribute, Vector3 } from 'three'
+
+/*
+ * Putanja: src/engine3d/utils/uvProjection.ts
+ *
+ * Ovaj fajl određuje kako se 2D slika prevodi na 3D površinu.
+ * To je osnova za pravilno lepljenje drvne šare, kamena i svih drugih dekora.
+ *
+ * Ako je tekstura okrenuta pogrešno, rastegnuta, zbijena ili nazubljena samo na nekim delovima,
+ * vrlo često je problem u UV rasporedu koji se računa ovde.
+ */
 import type { BufferGeometry, Mesh } from 'three'
 
 type AxisKey = 'x' | 'y' | 'z'
 type Orientation = 'front-vertical' | 'top-horizontal' | 'board-vertical' | 'board-horizontal'
 
+// Ako model nema UV koordinate, ovde ih pravimo da bi tekstura uopšte mogla da se prikaže.
 function ensureUvAttribute(geometry: BufferGeometry): BufferAttribute {
   const existing = geometry.getAttribute('uv')
   if (existing && existing.itemSize === 2) return existing as BufferAttribute
@@ -26,6 +37,7 @@ function axisSize(axis: AxisKey, size: Vector3): number {
   return Math.abs(size.z)
 }
 
+// Traži najtanju osu ploče da bi znao kako da rasporedi dekor kao na stvarnoj tabli.
 function getThicknessAxis(size: Vector3): AxisKey {
   const axes: AxisKey[] = ['x', 'y', 'z']
   return axes.reduce((smallest, current) => (axisSize(current, size) < axisSize(smallest, size) ? current : smallest), 'x')
@@ -59,6 +71,7 @@ function chooseBoardAxes(normalAxis: AxisKey, thicknessAxis: AxisKey, desiredGra
   return { uAxis: thicknessAxis, vAxis: longAxis }
 }
 
+// UV raspored za pločaste delove kao što su frontovi, stranice i police.
 function applyBoardUvProjection(mesh: Mesh, desiredGrainAxis: AxisKey) {
   let geometry = mesh.geometry
   if (!geometry) return
@@ -112,15 +125,18 @@ function applyBoardUvProjection(mesh: Mesh, desiredGrainAxis: AxisKey) {
   uv.needsUpdate = true
 }
 
+// Glavna ulazna tačka za izbor UV rasporeda prema vrsti površine.
 export function applyPlanarUvProjection(mesh: Mesh, orientation: Orientation) {
   const geometry = mesh.geometry
   if (!geometry) return
 
+  // Uspravni pločasti elementi: frontovi, bočne stranice i slični delovi.
   if (orientation === 'board-vertical') {
     applyBoardUvProjection(mesh, 'y')
     return
   }
 
+  // Vodoravni pločasti elementi: police, dno, cokla i slični delovi.
   if (orientation === 'board-horizontal') {
     applyBoardUvProjection(mesh, 'x')
     return
@@ -142,6 +158,7 @@ export function applyPlanarUvProjection(mesh: Mesh, orientation: Orientation) {
     let u = 0
     let v = 0
 
+    // Poseban jednostavan slučaj za ravnu prednju površinu.
     if (orientation === 'front-vertical') {
       u = size.x > 0 ? (x - bbox.min.x) / size.x : 0
       v = size.y > 0 ? (y - bbox.min.y) / size.y : 0

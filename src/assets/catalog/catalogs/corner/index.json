@@ -19,7 +19,7 @@
         "corner",
         "1100"
       ],
-      "mountingHeight": 100,
+      "mountingHeight": 0,
       "worktop": {
         "armAmm": 1100,
         "armBmm": 650,
@@ -44,7 +44,7 @@
         "corner",
         "1100"
       ],
-      "mountingHeight": 100,
+      "mountingHeight": 0,
       "worktop": {
         "armAmm": 650,
         "armBmm": 1100,
