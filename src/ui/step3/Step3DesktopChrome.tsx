@@ -37,6 +37,8 @@ export function Step3DesktopChrome({
   onDeleteSelected,
   onReset,
   onOrder,
+  onToggleFronts,
+  areFrontsVisible,
   isForwardDisabled,
   isDeleteDisabled,
   grandTotal,
@@ -67,10 +69,13 @@ export function Step3DesktopChrome({
   onDeleteSelected: () => void
   onReset: () => void
   onOrder: () => void
+  onToggleFronts: () => void
+  areFrontsVisible: boolean
   isForwardDisabled: boolean
   isDeleteDisabled: boolean
   grandTotal: number
 }) {
+
   return (
     <>
       <SidePanel
@@ -121,6 +126,13 @@ export function Step3DesktopChrome({
             <button className="btn primary" onClick={onForward} disabled={isForwardDisabled} aria-label="Redo" title="Redo"><Icon>{I.redo}</Icon></button>
             <button className="btn danger" onClick={onDeleteSelected} disabled={isDeleteDisabled} aria-label="Obriši" title="Obriši"><Icon>{I.trash}</Icon>Obriši</button>
             <button className="btn danger" onClick={onReset}><Icon>{I.reset}</Icon> Reset</button>
+            <button
+              className="btn"
+              onClick={onToggleFronts}
+              aria-label={areFrontsVisible ? 'Sakrij frontove i ručice' : 'Prikaži frontove i ručice'}
+              aria-pressed={!areFrontsVisible}
+              title={areFrontsVisible ? 'Sakrij frontove i ručice' : 'Prikaži frontove i ručice'}
+            ><Icon>{I.eye}</Icon> Pogledaj unutrašnjist</button>
           </div>
           <div className="glass" style={{ borderRadius: 24, padding: 12, display: 'grid', gap: 8, justifyItems: 'end' }}>
             <div className="hint" style={{ textTransform: 'uppercase', letterSpacing: 1.6 }}>Ukupna cena</div>

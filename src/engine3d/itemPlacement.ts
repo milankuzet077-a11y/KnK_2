@@ -39,6 +39,7 @@ export type PositioningContext = {
   mountingHeightMm: number
   activeElementsSubcat?: Subcat
   requestRender?: () => void
+  areFrontsVisible?: boolean
 }
 
 // Podrazumevana fizička veličina slike za frontove. Ova vrednost govori koliku ploču jedna slika simulira.
@@ -48,6 +49,22 @@ const DEFAULT_WORKTOP_SHEET = { width: 2800, height: 1300 }
 const DEFAULT_FRONT_CUT_HEIGHT_MM = 800
 
 const frontDecorSlicePlan = new Map<string, { xMm: number; yMm: number }>()
+
+const FRONT_DECOR_MATERIALS = new Set(['mesh_front'])
+const SIDE_DECOR_MATERIALS = new Set(['mesh_decor_side'])
+const DECOR_SURFACE_MATERIALS = new Set([...FRONT_DECOR_MATERIALS, ...SIDE_DECOR_MATERIALS])
+
+function isFrontDecorMaterial(materialName: string): boolean {
+  return FRONT_DECOR_MATERIALS.has(materialName)
+}
+
+function isSideDecorMaterial(materialName: string): boolean {
+  return SIDE_DECOR_MATERIALS.has(materialName)
+}
+
+function isDecorSurfaceMaterial(materialName: string): boolean {
+  return DECOR_SURFACE_MATERIALS.has(materialName)
+}
 
 function estimateFrontCutHeightMm(item: RenderableItem): number {
   const explicitHeight = Number((item as RenderableItem & { height?: number }).height ?? 0)
@@ -316,10 +333,10 @@ function applyLoadedTextureSet(
   usage: 'front' | 'worktop',
   requestRender?: () => void,
   sliceMm?: { xMm?: number; yMm?: number },
+  rotationQuarterTurns: 0 | 1 = 0,
 ) {
-  const frontRotationQuarterTurns: 0 | 1 = usage === 'front' && config.grain === 'vertical' ? 1 : 0
   const albedoTexture = usage === 'front'
-    ? buildFrontSliceTexture(textures.albedo, sizeMm, sliceMm, frontRotationQuarterTurns)
+    ? buildFrontSliceTexture(textures.albedo, sizeMm, sliceMm, rotationQuarterTurns)
     : textures.albedo
   configureTextureTransform(albedoTexture, sizeMm, config, usage, sliceMm)
   // Glavna vidljiva slika dekora.
@@ -329,7 +346,7 @@ function applyLoadedTextureSet(
 
   if (textures.roughness) {
     const roughnessTexture = usage === 'front'
-      ? buildFrontSliceTexture(textures.roughness, sizeMm, sliceMm, frontRotationQuarterTurns)
+      ? buildFrontSliceTexture(textures.roughness, sizeMm, sliceMm, rotationQuarterTurns)
       : textures.roughness
     configureTextureTransform(roughnessTexture, sizeMm, config, usage, sliceMm)
     // Mapa koja lokalno menja mat/sjaj izgled površine.
@@ -337,7 +354,7 @@ function applyLoadedTextureSet(
   }
   if (textures.normal) {
     const normalTexture = usage === 'front'
-      ? buildFrontSliceTexture(textures.normal, sizeMm, sliceMm, frontRotationQuarterTurns)
+      ? buildFrontSliceTexture(textures.normal, sizeMm, sliceMm, rotationQuarterTurns)
       : textures.normal
     configureTextureTransform(normalTexture, sizeMm, config, usage, sliceMm)
     // Mapa koja pod svetlom daje utisak sitnog reljefa.
@@ -348,8 +365,11 @@ function applyLoadedTextureSet(
   requestRender?.()
 }
 
-// Traži sve frontove unutar modela i lepi dekor samo na materijal fronta.
-function applyFrontDecor(root: THREE.Object3D, decor: string | undefined, item: RenderableItem, requestRender?: () => void) {
+// Traži sve dekor površine unutar modela i lepi dekor po odvojenim grupama materijala.
+ // Front i vidne stranice su namerno razdvojeni:
+ // - FRONT_DECOR_MATERIALS prati hide/show toggle frontova
+ // - SIDE_DECOR_MATERIALS ne prati front toggle i koristi kontra orijentaciju teksture
+function applyFrontDecor(root: THREE.Object3D, decor: string | undefined, item: RenderableItem, requestRender?: () => void, areFrontsVisible = true) {
   const resolvedDecor = decor ?? (item as { decor?: string }).decor ?? 'Bela'
   const textureConfig = getFrontTextureConfig(resolvedDecor)
   if (!textureConfig || !shouldApplyDecorToItem(item)) return
@@ -366,7 +386,7 @@ function applyFrontDecor(root: THREE.Object3D, decor: string | undefined, item: 
   root.traverse((obj) => {
     if (!isMeshObject(obj) || !obj.material) return
     const originalMaterials = Array.isArray(obj.material) ? obj.material : [obj.material]
-    const hasFrontMaterial = originalMaterials.some((mat: Material) => String(mat.name || '') === 'mesh_front')
+    const hasFrontMaterial = originalMaterials.some((mat: Material) => isDecorSurfaceMaterial(String(mat.name || '')))
     if (!hasFrontMaterial) return
     const metrics = getFrontFaceMetrics(obj)
     if (!metrics) return
@@ -394,16 +414,25 @@ function applyFrontDecor(root: THREE.Object3D, decor: string | undefined, item: 
 
     const nextMaterials = originalMaterials.map((mat: Material) => {
       const materialName = String(mat.name || '')
-      // Samo pravi front dobija dekor; ostali materijali ostaju netaknuti.
-      if (materialName !== 'mesh_front') return mat
+      // Front i dekorisana vidna stranica dobijaju isti dekor; ostali materijali ostaju netaknuti.
+      if (!isDecorSurfaceMaterial(materialName)) return mat
       touched = true
       const next = cloneWithPreservedBasics(mat, materialName)
+      if (isFrontDecorMaterial(materialName) && !areFrontsVisible) {
+        next.transparent = true
+        next.opacity = 0
+        next.depthWrite = false
+        next.needsUpdate = true
+        return next
+      }
+      if (!textureConfig) return next
+      const rotationQuarterTurns: 0 | 1 = isSideDecorMaterial(materialName) ? 1 : 0
       void loadTextureSet(textureConfig, quality.frontTextureMode, quality.textureAnisotropy).then((textures) => {
-        applyLoadedTextureSet(next, textures, textureConfig, { widthMm, heightMm }, 'front', requestRender, frontSliceMm)
+        applyLoadedTextureSet(next, textures, textureConfig, { widthMm, heightMm }, 'front', requestRender, frontSliceMm, rotationQuarterTurns)
 
         if (quality.frontTextureMode === 'albedo' && quality.useDetailMaps) {
           void loadTextureSet(textureConfig, 'full', quality.textureAnisotropy).then((fullTextures) => {
-            applyLoadedTextureSet(next, fullTextures, textureConfig, { widthMm, heightMm }, 'front', requestRender, frontSliceMm)
+            applyLoadedTextureSet(next, fullTextures, textureConfig, { widthMm, heightMm }, 'front', requestRender, frontSliceMm, rotationQuarterTurns)
           }).catch(() => {})
         }
       }).catch(() => {})
@@ -515,13 +544,21 @@ function createHandleOrPlinthMaterial(materialName: string, finish: string, fall
   return standardMaterial
 }
 
-function applyHandlesAndPlinthFinish(root: THREE.Object3D, finish: string) {
+function applyHandlesAndPlinthFinish(root: THREE.Object3D, finish: string, areFrontsVisible = true) {
   root.traverse((obj) => {
     if (!isMeshObject(obj) || !obj.material) return
 
     const originalMaterials = Array.isArray(obj.material) ? obj.material : [obj.material]
     const nextMaterials = originalMaterials.map((mat: THREE.Material) => {
       const materialName = String(mat.name || '')
+      if (materialName === 'mesh_handle' && !areFrontsVisible) {
+        const hiddenHandle = createHandleOrPlinthMaterial(materialName, finish, mat)
+        hiddenHandle.transparent = true
+        hiddenHandle.opacity = 0
+        hiddenHandle.depthWrite = false
+        hiddenHandle.needsUpdate = true
+        return hiddenHandle
+      }
       if (materialName !== 'mesh_handle' && materialName !== 'mesh_cokla') return mat
       return createHandleOrPlinthMaterial(materialName, finish, mat)
     })
@@ -593,7 +630,7 @@ export function createPlaceholderItemMesh(context: Omit<PositioningContext, 'mod
   return positioned
 }
 
-export function positionModel({ shape, wallAMm, item, model, optionsValues, mountingHeightMm, activeElementsSubcat, requestRender }: PositioningContext): PositionedRenderable {
+export function positionModel({ shape, wallAMm, item, model, optionsValues, mountingHeightMm, activeElementsSubcat, requestRender, areFrontsVisible = true }: PositioningContext): PositionedRenderable {
   void activeElementsSubcat
   if (!model) {
     throw new Error('Model is required for non-virtual items.')
@@ -638,8 +675,8 @@ export function positionModel({ shape, wallAMm, item, model, optionsValues, moun
     finalZ = 0
   }
 
-  applyHandlesAndPlinthFinish(model, optionsValues?.handles ?? 'Crna')
-  applyFrontDecor(model, (item as { decor?: string }).decor ?? optionsValues?.decor ?? 'Bela', item, requestRender)
+  applyHandlesAndPlinthFinish(model, optionsValues?.handles ?? 'Crna', areFrontsVisible)
+  applyFrontDecor(model, (item as { decor?: string }).decor ?? optionsValues?.decor ?? 'Bela', item, requestRender, areFrontsVisible)
   model.position.set(finalX, finalY, finalZ)
   model.userData = { id: item.uniqueId }
   const quality = detectQualityProfile()

@@ -30,6 +30,7 @@ type Props = {
   selected?: string | null
   onSelect?: (id: string | null) => void
   activeElementsSubcat?: Subcat
+  areFrontsVisible?: boolean
 }
 
 function Canvas3DFallback({ message }: { message?: string }) {

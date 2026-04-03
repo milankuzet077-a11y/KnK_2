@@ -15,6 +15,7 @@ type Props = {
   onSelect?: (id: string | null) => void
   onRuntimeError?: () => void
   activeElementsSubcat?: Subcat
+  areFrontsVisible?: boolean
   shouldRun?: boolean
 }
 
@@ -50,6 +51,7 @@ export function Canvas3D({
   onSelect,
   onRuntimeError,
   activeElementsSubcat,
+  areFrontsVisible = true,
   shouldRun = true,
 }: Props) {
   const hostRef = useRef<HTMLDivElement | null>(null)
@@ -63,6 +65,7 @@ export function Canvas3D({
   const latestOptionsValuesRef = useRef<Props['optionsValues']>(optionsValues)
   const latestSelectedRef = useRef<Props['selected']>(selected)
   const latestActiveElementsSubcatRef = useRef<Props['activeElementsSubcat']>(activeElementsSubcat)
+  const latestAreFrontsVisibleRef = useRef<Props['areFrontsVisible']>(areFrontsVisible)
   const renderSequenceRef = useRef(0)
   const selectionSequenceRef = useRef(0)
 
@@ -80,7 +83,8 @@ export function Canvas3D({
     latestOptionsValuesRef.current = optionsValues
     latestSelectedRef.current = selected
     latestActiveElementsSubcatRef.current = activeElementsSubcat
-  }, [items, optionsValues, selected, activeElementsSubcat])
+    latestAreFrontsVisibleRef.current = areFrontsVisible
+  }, [items, optionsValues, selected, activeElementsSubcat, areFrontsVisible])
 
   const wallsKey = useMemo(() => {
     const wallA = Math.round(Number(walls.A || 0))
@@ -150,6 +154,7 @@ export function Canvas3D({
       walls,
       selectedId: latestSelectedRef.current,
       activeElementsSubcat: latestActiveElementsSubcatRef.current,
+      areFrontsVisible: latestAreFrontsVisibleRef.current,
     })
 
     if (renderSequence !== renderSequenceRef.current) {
@@ -296,7 +301,7 @@ export function Canvas3D({
       renderCleanupRef.current?.()
       renderCleanupRef.current = null
     }
-  }, [items, optionsValues, renderCurrentScene, reportFatalError, selected, activeElementsSubcat])
+  }, [items, optionsValues, renderCurrentScene, reportFatalError, selected, activeElementsSubcat, areFrontsVisible])
 
   useEffect(() => {
     const runtime = runtimeRef.current

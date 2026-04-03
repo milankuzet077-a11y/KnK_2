@@ -50,6 +50,7 @@ export function Step3Configurator({
   const [activeDecorGroup, setActiveDecorGroup] = useState<DecorGroup>(() => initialView.activeDecorGroup)
   const [targetWall, setTargetWall] = useState<WallKey>(() => initialView.targetWall)
   const [selectedItemId, setSelectedItemId] = useState<string | null>(() => initialView.selectedItemId)
+  const [areFrontsVisible, setAreFrontsVisible] = useState(true)
   const [elementsScrollTop, setElementsScrollTop] = useState<number>(() => initialView.elementsScrollTop)
   const [optionsScrollTop, setOptionsScrollTop] = useState<number>(() => initialView.optionsScrollTop)
 
@@ -251,6 +252,7 @@ export function Step3Configurator({
           selected={selectedItemId}
           onSelect={(id) => { if (!isUiLocked && !isPreviewOnlyLandscape) setSelectedItemId(id) }}
           activeElementsSubcat={activeElementsSubcat}
+          areFrontsVisible={areFrontsVisible}
         />
       </Suspense>
 
@@ -312,6 +314,8 @@ export function Step3Configurator({
           onDeleteSelected={handleDeleteSelected}
           onReset={() => { if (!isUiLocked) setShowResetConfirm(true) }}
           onOrder={handleOrder}
+          onToggleFronts={() => { if (!isUiLocked) setAreFrontsVisible((value) => !value) }}
+          areFrontsVisible={areFrontsVisible}
           isForwardDisabled={isForwardDisabled}
           isDeleteDisabled={isDeleteDisabled}
           grandTotal={grandTotal}
@@ -345,6 +349,8 @@ export function Step3Configurator({
           onDeleteSelected={handleDeleteSelected}
           onReset={() => { if (!isUiLocked) setShowResetConfirm(true) }}
           onOrder={handleOrder}
+          onToggleFronts={() => { if (!isUiLocked) setAreFrontsVisible((value) => !value) }}
+          areFrontsVisible={areFrontsVisible}
           isForwardDisabled={isForwardDisabled}
           isDeleteDisabled={isDeleteDisabled}
           grandTotal={grandTotal}

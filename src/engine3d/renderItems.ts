@@ -26,6 +26,7 @@ type RenderItemsParams = {
   walls: Walls
   selectedId?: string | null
   activeElementsSubcat?: Subcat
+  areFrontsVisible?: boolean
 }
 
 function getDefaultMountingHeightMm(item: RenderableItem): number {
@@ -49,7 +50,7 @@ async function getModelUrl(item: RenderableItem) {
   return mod.getModelAssetUrl(item)
 }
 
-export function renderSceneItems({ runtime, items, optionsValues, shape, walls, selectedId, activeElementsSubcat }: RenderItemsParams): () => void {
+export function renderSceneItems({ runtime, items, optionsValues, shape, walls, selectedId, activeElementsSubcat, areFrontsVisible = true }: RenderItemsParams): () => void {
   const { itemsGroup, requestRender, syncQuality } = runtime
 
   try {
@@ -130,6 +131,7 @@ export function renderSceneItems({ runtime, items, optionsValues, shape, walls, 
             mountingHeightMm: Number(item.mountingHeight ?? indexedMountingHeightMm ?? getDefaultMountingHeightMm(item)),
             activeElementsSubcat,
             requestRender,
+            areFrontsVisible,
           })
 
           if (!cancelled && itemsGroup.parent) {

@@ -54,42 +54,6 @@
         "600"
       ],
       "mountingHeight": 0
-    },
-    {
-      "id": "k3",
-      "name": "Špajd D-40",
-      "type": "tall",
-      "glb": "/assets/glb/modules/tall/k3.glb",
-      "thumbnail": "/assets/thumbs/modules/tall/k3.png",
-      "dims": {
-        "w": 400,
-        "h": 2220,
-        "d": 550
-      },
-      "price": 150,
-      "tags": [
-        "tall",
-        "400"
-      ],
-      "mountingHeight": 0
-    },
-    {
-      "id": "k4",
-      "name": "Klasičan frižider",
-      "type": "tall",
-      "glb": "/assets/glb/modules/tall/k4.glb",
-      "thumbnail": "/assets/thumbs/modules/tall/k4.png",
-      "dims": {
-        "w": 650,
-        "h": 2220,
-        "d": 550
-      },
-      "price": 150,
-      "tags": [
-        "tall",
-        "650"
-      ],
-      "mountingHeight": 0
     }
   ]
 }

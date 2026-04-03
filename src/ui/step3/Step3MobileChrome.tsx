@@ -37,6 +37,8 @@ export function Step3MobileChrome({
   onDeleteSelected,
   onReset,
   onOrder,
+  onToggleFronts,
+  areFrontsVisible,
   isForwardDisabled,
   isDeleteDisabled,
   grandTotal,
@@ -68,6 +70,8 @@ export function Step3MobileChrome({
   onDeleteSelected: () => void
   onReset: () => void
   onOrder: () => void
+  onToggleFronts: () => void
+  areFrontsVisible: boolean
   isForwardDisabled: boolean
   isDeleteDisabled: boolean
   grandTotal: number
@@ -77,20 +81,42 @@ export function Step3MobileChrome({
   const GAP = 10
   const MINI_H = 56
   const miniBottom = DOCK_BOTTOM + DOCK_H + GAP
-  const priceBottom = miniBottom + MINI_H + GAP
 
   return (
     <>
-      <div className="safe" style={{ position: 'absolute', left: 0, right: 0, bottom: priceBottom }}>
-        <div className="pill glass" style={{ width: 'fit-content', marginLeft: 'auto', display: 'flex', gap: 10 }}>
-          <span className="hint">Cena</span>
-          <span style={{ fontWeight: 900 }}>{priceFormatter.format(grandTotal)} RSD</span>
-        </div>
-      </div>
       <div className="safe" style={{ position: 'absolute', left: 0, right: 0, bottom: miniBottom }}>
-        <div className="glass" style={{ width: 'fit-content', borderRadius: 20, padding: 8, display: 'flex', gap: 10, alignItems: 'center' }}>
-          <button className="btn" onClick={onBack} aria-label="Undo"><Icon>{I.undo}</Icon></button>
-          <button className="btn primary" onClick={onForward} disabled={isForwardDisabled} aria-label="Redo"><Icon>{I.redo}</Icon></button>
+        <div style={{ display: 'flex', alignItems: 'stretch', justifyContent: 'space-between', gap: 12 }}>
+          <div className="glass" style={{ width: 'fit-content', borderRadius: 20, padding: 8, display: 'flex', gap: 10, alignItems: 'center', flexShrink: 0 }}>
+            <button className="btn" onClick={onBack} aria-label="Undo"><Icon>{I.undo}</Icon></button>
+            <button className="btn primary" onClick={onForward} disabled={isForwardDisabled} aria-label="Redo"><Icon>{I.redo}</Icon></button>
+          </div>
+          <button
+            className="btn"
+            onClick={onToggleFronts}
+            aria-label={areFrontsVisible ? 'Sakrij frontove i ručice' : 'Prikaži frontove i ručice'}
+            aria-pressed={!areFrontsVisible}
+            title={areFrontsVisible ? 'Sakrij frontove i ručice' : 'Prikaži frontove i ručice'}
+            style={{ minHeight: MINI_H, width: MINI_H, padding: 0, flexShrink: 0 }}
+          >
+            <Icon>{I.eye}</Icon>
+          </button>
+          <div
+            className="glass"
+            style={{
+              width: 'fit-content',
+              minHeight: MINI_H,
+              padding: '0 16px',
+              borderRadius: 20,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 10,
+              marginLeft: 'auto',
+              flexShrink: 0,
+            }}
+          >
+            <span className="hint">Cena</span>
+            <span style={{ fontWeight: 900 }}>{priceFormatter.format(grandTotal)} RSD</span>
+          </div>
         </div>
       </div>
       <div className="dock glass">
